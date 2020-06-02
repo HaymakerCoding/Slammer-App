@@ -1,0 +1,46 @@
+<div *ngIf="updating === true">
+  <mat-spinner class="mx-auto d-block mt-5"></mat-spinner>
+  <h6 class="mt-2 text-center">Loading...</h6>
+</div>
+
+<div *ngIf="updating === false">
+
+  <div class="row mt-4">
+    <div class="col-12 col-md-6">
+      <mat-form-field class="full-width" appearance="outline">
+        <mat-label class="funText" style="color:navy;">Doggie Master</mat-label>
+        <mat-select [value]="eventSelected.doggieMaster" (selectionChange)="updateVolunteer($event.value, doggieMaster)">
+          <mat-option *ngFor="let player of allRegistered" [value]="player.nickname">{{ player.nickname }}</mat-option>
+          <mat-option [value]="null">None</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12 col-md-6">
+      <mat-form-field class="full-width" appearance="outline">
+        <mat-label class="funText" style="color:navy;">Skin Master</mat-label>
+        <mat-select [value]="eventSelected.skinMaster" (selectionChange)="updateVolunteer($event.value, skinMaster)">
+          <mat-option *ngFor="let player of allRegistered" [value]="player.nickname">{{ player.nickname }}</mat-option>
+          <mat-option [value]="null">None</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12 col-md-6">
+      <mat-form-field class="full-width" appearance="outline">
+        <mat-label class="funText" style="color:navy;">Photo Master</mat-label>
+        <mat-select [value]="eventSelected.photoMaster" (selectionChange)="updateVolunteer($event.value, photoMaster)">
+          <mat-option *ngFor="let player of allRegistered" [value]="player.nickname">{{ player.nickname }}</mat-option>
+          <mat-option [value]="null">None</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+</div>
+
+

@@ -1,0 +1,34 @@
+.section-titles{
+    color:navy;
+    text-align: center;
+    width:100%;
+    background-color:lightgray;
+    border-top:2px solid navy;
+    border-bottom:2px solid navy;
+    height:48px;
+}
+.section-titles h2{
+    line-height: 42px;
+    font-size:24px;
+}
+.viewLinks{
+    cursor:pointer;
+    color:navy;
+}
+.viewLinks:hover{
+    color:lime;
+    
+}
+.edit-icon{
+    position:absolute; top:5px; right:5px; border:1px solid navy; font-size:30px; height:35px; width:35px; border-radius:4px;
+    cursor: pointer;
+}
+.edit-icon:hover{
+    color:lime;
+}
+
+@media only screen and (max-width: 800px) {
+    .titleText{
+        font-size:24px;
+    }
+}

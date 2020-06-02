@@ -1,0 +1,48 @@
+<div class="row">
+  <div class="col-12 summaryBoxes">
+      <div class="summaryTitles">
+          <h4 class="text-center">Course Report</h4>
+      </div>
+      <div style="margin-top:50px; width:100%;" class="text-center">
+        <div class="summaryText" (click)="openSummaryDialog(summaryDialog, summaryTypes[0])">
+          {{ eventSummaries && eventSummaries.courseReport ? eventSummaries.courseReport.text : 'no course report (click to add)' }}
+        </div>
+      </div>
+  </div>
+  <div class="col-12 summaryBoxes">
+      <div class="summaryTitles">
+          <h4 class="text-center">Event Summary</h4>
+      </div>
+      <div style="position:relative; margin-top:50px; min-height:100%!important; width:100%;" class="text-center">
+        <div class="summaryText" (click)="openSummaryDialog(summaryDialog, summaryTypes[1])">
+          {{ eventSummaries && eventSummaries.summary ? eventSummaries.summary.text : 'no event summary (click to add)' }}
+        </div>
+      </div>
+  </div>
+  <div class="col-12 summaryBoxes mb-3">
+      <div class="summaryTitles">
+          <h4 class="text-center">Winner Summary</h4>
+      </div>
+      <div style="margin-top:50px; width:100%;" class="text-center">
+        <div class="summaryText" (click)="openSummaryDialog(summaryDialog, summaryTypes[2])">
+          {{ eventSummaries && eventSummaries.winnerSummary ? eventSummaries.winnerSummary.text : 'no winner summary (click to add)' }}
+        </div>
+      </div>
+  </div>
+</div>
+
+<ng-template #summaryDialog let-data>
+  <h1 mat-dialog-title>{{ !data.text ? 'Add ' : 'Update ' }}{{ data.type }}</h1>
+  <mat-dialog-content>
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Text</mat-label>
+      <textarea matInput [value]="data.text ? data.text : null" #text rows="6"></textarea>
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-raised-button color="primary" *ngIf="!data.text" (click)="addSummary(data.type, text.value)">Save</button>
+    <button mat-raised-button color="primary" *ngIf="data.text" (click)="updateSummary(data.type, text.value)">Update</button>
+    <button mat-raised-button color="primary" *ngIf="data.text" (click)="deleteSummary(data.type)">Delete</button>
+    <button mat-raised-button color="primary" (click)="close()">Cancel</button>
+  </mat-dialog-actions>
+</ng-template>

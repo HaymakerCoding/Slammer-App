@@ -1,0 +1,47 @@
+
+<div class="table-container">
+    <table mat-table [dataSource]="datasource" class="full-width">
+      <ng-container matColumnDef="hole">
+        <th mat-header-cell *matHeaderCellDef>Hole</th>
+        <td mat-cell *matCellDef="let winner" class="gradient-blue"><span>{{ winner.hole }}</span></td>
+      </ng-container>
+      <ng-container matColumnDef="name">
+        <th class="text-center" mat-header-cell *matHeaderCellDef>Name</th>
+        <td class="text-center" mat-cell *matCellDef="let winner">
+          <span *ngIf="winner.name">{{ winner.name }}</span>
+          <button *ngIf="winner.name === null" (click)="showDoggieDialog(doggieDialog, null, winner.hole)" mat-raised-button color="primary">Add</button>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="distance">
+        <th class="text-center" mat-header-cell *matHeaderCellDef>Distance</th>
+        <td class="text-center" mat-cell *matCellDef="let winner">
+          <span>{{ winner.distance ? winner.distance : 'N/A' }}</span>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columns"></tr>
+      <tr mat-row [class.clickable]="winner.name ? true : false" (click)="winner.name ? showDoggieDialog(doggieDialog, winner, winner.hole) : null" *matRowDef="let winner; columns: columns"></tr>
+    </table>
+  </div>
+
+  <ng-template #doggieDialog let-data>
+    <h1 mat-dialog-title>{{ data ? 'Update Doggie Winner' : 'Add Doggie Winner' }}</h1>
+    <mat-dialog-content>
+      <mat-form-field class="full-width" appearance="outline">
+        <mat-label>Player</mat-label>
+        <mat-select [value]="data ? data.slammerId : null" #playerSelect>
+          <mat-option *ngFor="let player of allRegistered" [value]="player.slammerId">{{ player.nickname }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="full-width" appearance="outline">
+        <mat-label>Distance</mat-label>
+        <input matInput [value]="data ? data.distance : null" #distanceInput>
+      </mat-form-field>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+      <button mat-raised-button color="primary"
+        (click)="!data ? addWinner(playerSelect.value, distanceInput.value) : updateWinner(playerSelect.value, distanceInput.value, data.id)">Save</button>
+      <button mat-raised-button color="primary" (click)="close()">Cancel</button>
+      <button mat-raised-button color="primary" *ngIf="data" (click)="deleteWinner(data.id)">Delete</button>
+    </mat-dialog-actions>
+  </ng-template>

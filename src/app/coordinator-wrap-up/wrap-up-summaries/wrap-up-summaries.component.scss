@@ -1,0 +1,25 @@
+.summaryBoxes{
+    margin-top:45px;
+    border:2px solid #ff8c00;
+    border-radius:10px;
+    min-height:160px;
+    position:relative;
+}
+.summaryTitles{
+    position:absolute; 
+    top:-35px; 
+    z-index:2; 
+    font-size:25px;
+    background-color:white;
+    left:calc(50% - 90px);
+    padding-left:10px;
+    width:160px;
+}
+.summaryTitles h4{
+    color:#ff8c00;
+    font-size:25px!important;
+}
+.summaryText{
+    cursor:pointer; min-height:100%; background-color:#fff8dc; border:1px solid orange; border-radius:10px; padding:20px;
+    color:navy;
+}

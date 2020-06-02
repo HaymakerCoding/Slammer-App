@@ -1,0 +1,58 @@
+.section-titles{
+    color:navy;
+    text-align: center;
+    width:100%;
+    background-color:lightgray;
+    border-top:2px solid navy;
+    border-bottom:2px solid navy;
+    height:48px;
+    position: relative;
+}
+.section-titles h2{
+    line-height: 42px;
+    font-size:24px;
+}
+.action-button{
+    position:absolute; top:3px; right:5px;
+}
+
+.quoteContainers{
+    background-color:#fff8dc; border:1px solid orange; border-radius:10px; padding:20px; height:100%;
+}
+.clickableQuotes:hover{
+    background-color:#e4e7ed;
+    cursor:pointer;
+}
+.quoteContainers{
+    background-color:#fff8dc;
+    border-radius:10px; 
+    padding:10px; 
+    height:100%;
+    border: 3px solid orange;
+    text-align: center;
+    position: relative;
+}
+.quoteContainers:before{
+    content: "";
+    width: 0px;
+    height: 0px;
+    top:calc(50% - 10px);
+    position: absolute;
+    border-left: 10px solid orange;
+    border-right: 10px solid transparent;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    right: -23px;
+}
+.quoteContainers:after{
+    content: "";
+    width: 0px;
+    height: 0px;
+    top:calc(50% - 10px);
+    position: absolute;
+    border-left: 10px solid #fff8dc;
+    border-right: 10px solid transparent;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    right: -17px;
+}

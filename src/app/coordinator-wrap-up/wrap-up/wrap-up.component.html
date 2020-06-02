@@ -1,0 +1,205 @@
+<div class="container pb-4 pt-4">
+
+  <div *ngIf="loadingPercentage < 100">
+    <mat-progress-bar value="{{ loadingPercentage }}" color="primary" mode="determinate"></mat-progress-bar>
+    <div class="full-width text-center mt-2">Loading</div>
+  </div>
+  <div *ngIf="loadingPercentage === 100">
+
+    <h1 class="text-center mb-4 titleText">Onsite Coordinator Wrap-Up</h1>
+    <section>
+      <div class="row">
+        <div class="col-12 col-md-6">
+          <mat-form-field class="full-width" appearance="outline">
+            <mat-label>
+              Season
+            </mat-label>
+            <mat-select [(value)]="seasonSelected" (selectionChange)="seasonChanged($event.value)">
+              <mat-option *ngFor="let season of seasons" [value]="season">{{ season }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field class="full-width" appearance="outline">
+            <mat-label>
+              Event
+            </mat-label>
+            <mat-select [(value)]="eventSelected" (selectionChange)="eventChanged($event.value)">
+              <mat-option *ngFor="let event of eventList" [value]="event">
+                {{ event.courseName + ' - ' + (event.date) + ' - ' + event.id }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-md-6" style="display:flex; align-items: center; justify-content: center;">
+          <div class="name-container">
+            <h6><b>Coordinator:</b><span class="light-text ml-2">{{ eventSelected.coordinatorName }}</span></h6>
+            <h6><b>User:</b><span *ngIf="userName" class="light-text ml-2">{{ userName }}</span></h6>
+            <h6><b>Registered:</b>{{ allRegistered.length }} (<span class="viewLinks" (click)="openRegDialog('reg', regDialog)" href="#">View</span>)</h6>
+            <h6><b>Bailed:</b>{{ allBailed.length }} (<span class="viewLinks" (click)="openRegDialog('bail', regDialog)" href="#">View</span>)</h6>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--Publish toggle-->
+    <mat-slide-toggle (change)="togglePublish()" [checked]="eventSelected.published === '1'" class="mb-3">Publish</mat-slide-toggle>
+    <br>
+    <!--Scorecard-->
+    <section>
+    <div class="section-titles" style="position: relative;">
+      <h2>Scorecard</h2>
+      <mat-icon class="edit-icon" (click)="showEditScorecard(scorecardDialog)">edit</mat-icon>
+    </div>
+    <table class="table table-small">
+      <thead>
+      <tr>
+        <td>Hole</td>
+        <td *ngFor="let hole of holes">{{ hole }}</td>
+      </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Par</td>
+          <td *ngFor="let hole of holes">{{ getHolePar(hole) }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <p *ngIf="pars.length < 1">No scorecard set for this event</p>
+    </section>
+    <!--Player Scores-->
+    <section>
+      <div class="section-titles">
+        <h2>Player Scores</h2>
+      </div>
+      <app-wrap-up-scores [groups]="groups" [eventSelected]="eventSelected" [allRegistered]="allRegistered" [allBailed]="allBailed"></app-wrap-up-scores>
+    </section>
+
+    <!--Doggie Winners-->
+    <section>
+      <div class="section-titles">
+        <h2>Doggie Winners</h2>
+      </div>
+      <app-wrap-up-doggies [pars]="pars" [eventSelected]="eventSelected" [allRegistered]="allRegistered"></app-wrap-up-doggies>
+    </section>
+
+    <div class="section-titles">
+      <h2>Volunteers</h2>
+    </div>
+    <app-wrap-up-volunteers [eventSelected]="eventSelected" [allRegistered]="allRegistered"></app-wrap-up-volunteers>
+
+    <div class="section-titles">
+      <h2>CMPC match draws</h2>
+    </div>
+    <app-wrap-up-cmpc></app-wrap-up-cmpc>
+
+    <!--Quotables, Notables and Feedback-->
+    <app-wrap-quotables [allQuotes]="allQuotes" [allRegistered]="allRegistered" [eventSelected]="eventSelected"></app-wrap-quotables>
+
+    <!--Most Stylin Winner-->
+    <app-wrap-up-stylin [eventSelected]="eventSelected" [allRegistered]="allRegistered"></app-wrap-up-stylin>
+
+    <!--Points section *Done in this component-->
+    <div class="section-titles">
+      <h2>Points</h2>
+    </div>
+    <section class="text-center">
+      <a href="https://new.slammertour.com/Results/event_points.php?eventId={{eventSelected.id}}" class="mt-2 mb-2" mat-raised-button color="primary">Review and Commit Points</a>
+      <h4 class="text-center">Points Commited:
+        <span [style.color]="pointsCommited === true ? 'green' : 'red'">
+        {{ pointsCommited === true ? 'done' : 'Not yet' }}
+        </span>
+      </h4>
+    </section>
+
+    <!--Winner Photo-->
+    <app-wrap-up-winner-photo [eventSelected]="eventSelected" [allRegistered]="allRegistered"></app-wrap-up-winner-photo>
+
+    <!--Kids Money-->
+    <app-wrap-up-kids-money [eventSelected]="eventSelected"></app-wrap-up-kids-money>
+
+    <div class="section-titles">
+      <h2>Summaries</h2>
+    </div>
+    <app-wrap-up-summaries [eventSelected]="eventSelected"></app-wrap-up-summaries>
+
+    <!--Video Report Links-->
+    <div class="section-titles">
+      <h2>Video Report Links</h2>
+    </div>
+    <section>
+      <mat-form-field appearance="outline" class="full-width mt-2">
+        <mat-label>
+          Doggie Master Video
+        </mat-label>
+        <input matInput [(ngModel)]="eventSelected.doggieMasterVideo" (input)="unsavedVideoLinks = true">
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>
+          Skin Master Video
+        </mat-label>
+        <input matInput [(ngModel)]="eventSelected.skinMasterVideo" (input)="unsavedVideoLinks = true">
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>
+          OC Video
+        </mat-label>
+        <input matInput [(ngModel)]="eventSelected.OCvideo" (input)="unsavedVideoLinks = true">
+      </mat-form-field>
+      <p style="color:red;" *ngIf="unsavedVideoLinks === true">* You may have unsaved changes, don't forget to save.</p>
+      <button mat-raised-button (click)="updateEventLinks()" color="primary">Save</button>
+    </section>
+
+    <div class="section-titles">
+      <h2>Message to ST Management</h2>
+    </div>
+    <section>
+      <mat-form-field class="full-width mt-3" appearance="outline">
+        <mat-label>Message</mat-label>
+        <textarea maxlength="500" cdkTextareaAutosize [cdkAutosizeMinRows]="4" #msgText matInput [placeholder]="'Optional - Send any thoughts/issues regarding this event to the ST management team'"></textarea>
+      </mat-form-field>
+      <button mat-raised-button (click)="sendMessage(msgText.value)" color="primary">Send</button>
+    </section>
+
+  </div> <!--end loading container-->
+
+</div> <!--end main container-->
+
+<!--Dialog to show registered players-->
+<ng-template #regDialog let-data>
+  <h3 mat-dialog-title>{{ data.title + ' (' + data.data.length +')' }}</h3>
+  <mat-dialog-content>
+    <div class="row" *ngFor="let reg of data.data" style="border-bottom: 1px solid lightgray; padding: 5px;">
+      <div class="col-8">
+        {{ reg.fullName + ' (' + reg.nickname + ')' }}
+      </div>
+      <div class="col-4">
+        <i>{{ reg.status }}</i>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-raised-button color="primary" (click)="close()">Close</button>
+  </mat-dialog-actions>
+</ng-template>
+
+<!--Dialog for editing a scorecard (Pars)-->
+<ng-template #scorecardDialog>
+  <h3 mat-dialog-title>Scorecard</h3>
+  <mat-dialog-content>
+    <mat-tab-group>
+      <mat-tab label="Enter Manually">
+        <br>
+        <mat-form-field appearance="outline" *ngFor="let par of pars">
+          <mat-label>{{ 'Hole ' + par.hole }}</mat-label>
+          <input matInput [(ngModel)]="par.par">
+        </mat-form-field>
+      </mat-tab>
+      <mat-tab label="Choose Scorecard">
+        <br>
+        <p>Coming soon</p>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-raised-button (click)="updateScorecard()" color="primary">Save Scorecard</button>
+    <button mat-raised-button (click)="close()" color="primary">Cancel</button>
+  </mat-dialog-actions>
+</ng-template>

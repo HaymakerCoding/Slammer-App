@@ -1,0 +1,122 @@
+<div class="container-fluid pl-5 pr-5 pb-5 pt-2">
+
+  <div *ngIf="loadingPercentage === 100" class="inner-container">
+    <br>
+    <section class="info-section">
+      <h1 class="text-center" style="color:navy;"><i>ST Live</i><span style=" margin-left:15px; font-size:20px;">from</span> {{ course.fullName }}</h1>
+      <div class="logo-container grey-text">
+        <span class="text-center">{{ event.date | date }}</span>
+        <img class="course-logo ml-4 mr-4" *ngIf="course.logo" [src]="course.logo">
+        <span>{{ event.time }}</span>
+      </div>
+
+      <button (click)="refreshScores()" class="btn btn-outline-secondary mb-2" style="display: flex; align-items: center; justify-content: center;">
+        <mat-icon class="mr-2">refresh</mat-icon><span>Refresh results</span>
+      </button>
+    </section>
+
+    <!--By Group Sections-->
+    <section class="full-width">
+      <div *ngFor="let group of groups" class="table-container full-width">
+          <div class="grey-text">Group #{{ group.groupNum }}</div>
+          <table class="table full-width" style="min-width:100%">
+            <thead style="border-left:2px solid #ff8c00;">
+              <tr style="background-color:orange;">
+                <th class="orange-field">Hole</th>
+                <th class="text-center orange-field" *ngFor="let hole of holes">{{ hole }}</th>
+                <th rowspan="2" class="text-center orange-field results-field" style="border-top:1px solid #ff8c00; vertical-align: middle;">Status after {{ getHolesComplete(group) }} holes</th>
+              </tr>
+              <tr style="background-color:lightgray;">
+                <th class="orange-field">Par</th>
+                <th class="text-center orange-field" *ngFor="let hole of holes">{{ getPar(hole) }}</th>
+              </tr>
+            </thead>
+            <tbody style="border-bottom:1px solid #ff8c00; border-left:2px solid #ff8c00;">
+              <tr *ngIf="group.player1id" class="clickable-row">
+                <td (click)="changeSelected(group.groupNum, group.player1id)" class="name-field" [class.active]="group.player1id === group.playerSelectedId">
+                  {{ group.player1nickname + ' ' + getPlayerRank(group.player1id) + ' (' + group.player1name + ')' }}
+                </td>
+                <td class="text-center" *ngFor="let hole of holes">{{ getHoleScore(group.player1id, hole) }}</td>
+                <td style="border-top:1px solid #ff8c00;" class="results-field text-center">{{ getMatchResult(group.player1id, group.groupNum) }}</td>
+              </tr>
+              <tr *ngIf="group.player2id" class="clickable-row">
+                <td (click)="changeSelected(group.groupNum, group.player2id)" class="name-field" [class.active]="group.player2id === group.playerSelectedId">
+                  {{ group.player2nickname + ' ' + getPlayerRank(group.player2id) + ' (' + group.player2name + ')'  }}
+                </td>
+                <td class="text-center" *ngFor="let hole of holes">{{ getHoleScore(group.player2id, hole) }}</td>
+                <td style="border-top:1px solid lightgray;" class="results-field text-center">{{ getMatchResult(group.player2id, group.groupNum) }}</td>
+              </tr>
+              <tr *ngIf="group.player3id" class="clickable-row">
+                <td (click)="changeSelected(group.groupNum, group.player3id)" class="name-field" [class.active]="group.player3id === group.playerSelectedId">
+                  {{ group.player3nickname + ' ' + getPlayerRank(group.player3id) + ' (' + group.player3name + ')'  }}
+                </td>
+                <td class="text-center" *ngFor="let hole of holes">{{ getHoleScore(group.player3id, hole) }}</td>
+                <td style="border-top:1px solid lightgray;" class="results-field text-center">{{ getMatchResult(group.player3id, group.groupNum) }}</td>
+              </tr>
+              <tr *ngIf="group.player4id" class="clickable-row">
+                <td (click)="changeSelected(group.groupNum, group.player4id)" class="name-field" [class.active]="group.player4id === group.playerSelectedId">
+                  {{ group.player4nickname + ' ' + getPlayerRank(group.player4id) + ' (' + group.player4name + ')'  }}
+                </td>
+                <td class="text-center" *ngFor="let hole of holes">{{ getHoleScore(group.player4id, hole) }}</td>
+                <td style="border-top:1px solid lightgray;" class="results-field text-center">{{ getMatchResult(group.player4id, group.groupNum) }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+    </section>
+
+    <div class="mt-5 mb-5" style="height:5px; width:80%; border: 1px solid; margin-right:10%; margin-left:10%; border-radius:2px; background-color:#ff8c00;"></div>
+
+    <h2 class="text-center">Doggie Results</h2>
+    <section class="mt-3">
+      <div class="row" *ngFor="let par of doggiePars">
+        <div class="col-6 col-md-4 offset-md-2 doggie-hole-text orange-field">Hole #{{ par.hole }}</div>
+        <div class="col-6 col-md-4 doggie-results-text">{{ getDoggieWinner(par.hole) }}</div>
+      </div>
+    </section>
+
+    <div class="mt-5 mb-5" style="height:5px; width:80%; border: 1px solid; margin-right:10%; margin-left:10%; border-radius:2px; background-color:#ff8c00;"></div>
+
+    <!--CMPC mathes section-->
+    <h2 class="text-center">City Match-Play Championship</h2>
+    <section>
+      <h3 class="grey-text small-text">Singles</h3>
+      <table *ngFor="let match of CMPCsingles" class="table full-width" style="min-width:100%">
+        <thead style="border-left:2px solid #ff8c00;">
+          <tr style="background-color:orange;">
+            <th class="orange-field">Hole</th>
+            <th class="text-center orange-field" *ngFor="let hole of holes">{{ hole }}</th>
+            <th rowspan="2" class="text-center orange-field results-field" style="border-top:1px solid #ff8c00; vertical-align: middle;">Status after holes</th>
+          </tr>
+          <tr style="background-color:lightgray;">
+            <th class="orange-field">Par</th>
+            <th class="text-center orange-field" *ngFor="let hole of holes">{{ getPar(hole) }}</th>
+          </tr>
+        </thead>
+        <tbody style="border-bottom:1px solid #ff8c00; border-left:2px solid #ff8c00;">
+          <tr class="clickable-row">
+            <td class="name-field">
+              {{ getCMPCplayerName(match.player1) }}
+            </td>
+            <td class="text-center" *ngFor="let hole of holes">{{ getHoleScore(match.player1, hole) }}</td>
+            <td style="border-top:1px solid #ff8c00;" class="results-field text-center"></td>
+          </tr>
+          <tr class="clickable-row">
+            <td class="name-field">
+              {{ getCMPCplayerName(match.player2)  }}
+            </td>
+            <td class="text-center" *ngFor="let hole of holes">{{ getHoleScore(match.player2, hole) }}</td>
+            <td style="border-top:1px solid lightgray;" class="results-field text-center"></td>
+          </tr>
+        </tbody>
+      </table>
+
+    </section>
+    <section>
+      <h3 class="grey-text small-text">Doubles</h3>
+
+    </section>
+
+  </div>
+
+</div>

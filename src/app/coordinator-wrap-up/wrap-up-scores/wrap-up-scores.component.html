@@ -1,0 +1,94 @@
+<p *ngIf="playerScores && playerScores.length < 1">No Scores yet</p>
+<div *ngFor="let group of groups" class="table-container full-width">
+  <div>Group #{{ group.groupNum }}</div>
+  <table class="table table-responsive full-width">
+    <thead>
+      <tr>
+        <th>Player</th>
+        <th class="text-center" *ngFor="let hole of holes">{{ hole }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngIf="group.player1id" class="clickable-row" (click)="editScores(group.player1id, scoresDialog, missingScoresDialog)">
+        <td class="name-field">{{ group.player1nickname }}</td>
+        <td class="text-center" *ngFor="let hole of holes">{{ getHoleScore(group.player1id, hole) }}</td>
+      </tr>
+      <tr *ngIf="group.player2id" class="clickable-row" (click)="editScores(group.player2id, scoresDialog, missingScoresDialog)">
+        <td class="name-field">{{ group.player2nickname }}</td>
+        <td class="text-center" *ngFor="let hole of holes">{{ getHoleScore(group.player2id, hole) }}</td>
+      </tr>
+      <tr *ngIf="group.player3id" class="clickable-row" (click)="editScores(group.player3id, scoresDialog, missingScoresDialog)">
+        <td class="name-field">{{ group.player3nickname }}</td>
+        <td class="text-center" *ngFor="let hole of holes">{{ getHoleScore(group.player3id, hole) }}</td>
+      </tr>
+      <tr *ngIf="group.player4id" class="clickable-row" (click)="editScores(group.player4id, scoresDialog, missingScoresDialog)">
+        <td class="name-field">{{ group.player4nickname }}</td>
+        <td class="text-center" *ngFor="let hole of holes">{{ getHoleScore(group.player4id, hole) }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!--DEPRICATED !?? Section to look for players with no scores
+<section *ngIf="playersWithNoScores.length > 0">
+  <hr>
+  <h4>Players with no scores yet</h4>
+  * Note you do not have to intialize these scores UNLESS they were not entered during the match
+  <div *ngFor="let player of playersWithNoScores; let i = index" class="row mt-2">
+    <div class="col-4">
+      {{ (i+1) + '. ' + player.nickname + ' (' + player.slammerId + ')' }}
+    </div>
+    <div class="col-4">
+      <button color="primary" (click)="initScores(player.slammerId)" mat-raised-button>Initialize Scores</button>
+    </div>
+  </div>
+</section>
+-->
+
+<ng-template #scoresDialog let-data>
+  <h1 *ngIf="data" mat-dialog-title>{{ 'Editing ' + data.nickname + '\'s Scores' }}</h1>
+  <mat-dialog-content>
+    <div *ngIf="data">
+      <div class="row">
+        <div class="col-6">
+          <div *ngFor="let score of data.scores; let i = index">
+            <div *ngIf="(i < 9)">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">{{ 'H #' + score.hole }}</span>
+                  <input #scoreInputs type="number" (input)="changePlayerSore(data.slammerId, score.hole, $event.target.value, i)" [value]="score.score">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div *ngFor="let score of data.scores; let i = index">
+            <div *ngIf="(i >= 9)">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">{{ 'H #' + score.hole }}</span>
+                  <input #scoreInputs type="number" (input)="changePlayerSore(data.slammerId, score.hole, $event.target.value, (i))" [value]="score.score">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-raised-button color="primary" (click)="saveScores(data)">Save</button>
+    <button mat-raised-button color="primary" (click)="cancel(data)">Cancel</button>
+  </mat-dialog-actions>
+</ng-template>
+
+<ng-template #missingScoresDialog let-data>
+  <h1 mat-dialog-title>Missing scores</h1>
+  <mat-dialog-content>
+    <div>This group did not enter scores on the app.
+      <br>Fix? (Initialize group scores to zero)</div>
+    <button mat-raised-button color="primary" (click)="initGroupScores(data)">Yes</button>
+
+  </mat-dialog-content>
+</ng-template>

@@ -1,0 +1,71 @@
+<!--Quoatables-->
+<div class="section-titles">
+  <h2>Quotables ({{ allQuotes.quotables.length }})</h2>
+  <button mat-raised-button color="primary" (click)="editOrAddQuote(quoteDialog, null, 'Quotable')" class="action-button">Add</button>
+</div>
+
+<p *ngIf="allQuotes.quotables.length < 1">There are not quotables today</p>
+<div *ngFor="let quote of allQuotes.quotables" class="row mt-1 clickableQuotes" (click)="editOrAddQuote(quoteDialog, quote, 'Quotable')">
+    <div class="col-8 col-md-6">
+      <p class="quoteContainers">{{ quote.Quote }}</p>
+    </div>
+    <div class="col-4 col-md-6 text-center" style="display:flex; align-items:center;">
+      <span>{{ quote.Slammer }}</span>
+    </div>
+</div>
+
+<!--Notables-->
+<div class="section-titles">
+  <h2>Notables ({{ allQuotes.notables.length }})</h2>
+  <button mat-raised-button color="primary" (click)="editOrAddQuote(quoteDialog, null, 'Notable')" class="action-button">Add</button>
+</div>
+
+<p *ngIf="allQuotes.notables.length < 1">There are not notables today</p>
+<div *ngFor="let quote of allQuotes.notables" class="row mt-1 clickableQuotes" (click)="editOrAddQuote(quoteDialog, quote, 'Notable')">
+    <div class="col-8 col-md-6">
+      <p class="quoteContainers">{{ quote.Quote }}</p>
+    </div>
+    <div class="col-4 col-md-6 text-center" style="display:flex; align-items:center;">
+      <span>{{ quote.Slammer }}</span>
+    </div>
+</div>
+
+<!--Feedback-->
+<div class="section-titles">
+  <h2>Feedback ({{ allQuotes.feedbacks.length }})</h2>
+  <button mat-raised-button color="primary" (click)="editOrAddQuote(quoteDialog, null, 'Feedback')" class="action-button">Add</button>
+</div>
+
+<p *ngIf="allQuotes.feedbacks.length < 1">There is no Feedback today</p>
+<div *ngFor="let quote of allQuotes.feedbacks" class="row mt-1 clickableQuotes" (click)="editOrAddQuote(quoteDialog, quote, 'Feedback')">
+    <div class="col-8 col-md-6">
+      <p class="quoteContainers">{{ quote.Quote }}</p>
+    </div>
+    <div class="col-4 col-md-6 text-center" style="display:flex; align-items:center;">
+      <span>{{ quote.Slammer }}</span>
+    </div>
+</div>
+
+<ng-template #quoteDialog let-data>
+  <h1 mat-dialog-title>{{ data.quote ? 'Update ' : 'Add new '}}{{ data.type }} </h1>
+  <mat-dialog-content>
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Text</mat-label>
+      <textarea #text matInput> {{ data.quote ? data.quote.Quote : null }}</textarea>
+    </mat-form-field>
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>
+        Player
+      </mat-label>
+      <mat-select #playerSelect [value]="data.quote ? getPlayer(data.quote.Slammer) : null">
+        <mat-option *ngFor="let player of allRegistered" [value]="player">{{ player.nickname }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-raised-button color="primary" (click)="update(data.quote.id, text.value, playerSelect.value, data.type)" *ngIf="data.quote">Update</button>
+    <button mat-raised-button color="primary" (click)="delete(data.quote.id, data.type)" *ngIf="data.quote">Delete</button>
+    <button mat-raised-button color="primary" [disabled]="!text.value" (click)="add(text.value, playerSelect.value, data.type)" *ngIf="!data.quote">Add</button>
+    <button mat-raised-button color="primary" (click)="close()">Cancel</button>
+  </mat-dialog-actions>
+</ng-template>

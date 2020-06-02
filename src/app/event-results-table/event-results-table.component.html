@@ -1,0 +1,57 @@
+<div class="container pt-4 pb-4">
+  <mat-progress-bar  *ngIf="loading === true" mode="indeterminate"></mat-progress-bar>
+  <div class="inner-container" *ngIf="loading === false">
+
+    <mat-form-field class="year-select" appearance="outline">
+      <mat-label>Previous Years</mat-label>
+      <mat-select (selectionChange)="getEvents()" [(ngModel)]="yearSelected">
+        <mat-option [value]="year" *ngFor="let year of years">{{ year }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <h1 class="text-center">Event Summaries {{ yearSelected }}</h1>
+
+    <table class="table table-sm mt-3 table-striped">
+
+      <thead>
+        <tr class="text-center blue-gradient">
+            <th>#</th>
+            <th>Course</th>
+            <th>Date</th>
+            <th *ngIf="onPhone === false">OC</th>
+            <th *ngIf="onPhone === false">Att</th>
+            <th>Winner</th>
+            <th *ngIf="onPhone === false">Kids $</th>
+        </tr>
+      </thead>
+      <!--live events go first-->
+      <tbody>
+        <tr *ngFor="let event of liveEvents" class="text-center clickable-rows" (click)="goToLiveEvent(event.id)">
+          <td>{{ event.eventNum }}</td>
+          <td class="live-rows" colspan="6">
+            <i>ST Live</i>
+            <span style="font-size:12px; margin-left:10px; margin-right:9px;">from</span>
+            {{ event.courseName + ' today starting at ' + event.time + ' with OC ' + event.coordinatorName }}
+          </td>
+
+        </tr>
+      </tbody>
+      <tbody *ngFor="let monthEvent of monthEvents">
+        <tr>
+          <td class="text-center orange-text month-names" colspan="7">{{ getFullMonth(monthEvent.month) }}</td>
+        </tr>
+        <tr *ngFor="let event of monthEvent.events; let i = index" (click)="goToEvent(event.id)" class="text-center clickable-rows">
+          <td>{{ event.eventNum }}</td>
+          <td>{{ event.courseName }}</td>
+          <td>{{ event.displayDate }}</td>
+          <td *ngIf="onPhone === false">{{ event.coordinatorName }}</td>
+          <td *ngIf="onPhone === false">{{ event.attendance }}</td>
+          <td>{{ event.winner }}</td>
+          <td *ngIf="onPhone === false">{{ event.kidsBones ? '$' + event.kidsBones + '.00' : '$0.00' }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+</div>
+

@@ -1,0 +1,67 @@
+.group-headings{
+    font-size: 20px;
+    padding:10px;
+    font-weight:600;
+}
+.result-headers{
+    padding:10px;
+    border-bottom: 1px solid lightgray;
+}
+.name-field{
+    background-image: linear-gradient(#174a96, #000080);
+    color:white;
+    min-width: 250px;
+    max-width: 250px;
+    cursor: pointer;
+}
+.name-field:hover, .active{
+    background-image: none;
+    background-color:lime;
+    color:navy;
+}
+.orange-field{
+    border-top:2px solid #ff8c00; border-bottom: 1px solid #ff8c00;
+}
+.doggie-hole-text{
+    background-color:orange;
+    color:navy;
+    font-size:20px;
+    padding:10px;
+    margin-bottom:4px;
+}
+.results-field{
+    background-color:#fff8dc;
+    font-weight:500;
+    border-left:1px solid #ff8c00;
+    border-right:1px solid #ff8c00;
+    border-top:none;
+    border-bottom: none;
+    color:navy;
+}
+.doggie-results-text {
+    background-color:#fff8dc;
+    font-weight:500;
+    font-size:20px;
+    padding:10px;
+    margin-bottom:4px;
+    color:navy;
+    text-align: center;
+}
+.course-logo {
+    width:140px;
+}
+.grey-text{
+    color:rgb(113, 107, 107);
+}
+.small-text{
+    font-size:16px;
+}
+.logo-container{
+    width:100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.live-rows{
+  background-attachment: fixed;
+}

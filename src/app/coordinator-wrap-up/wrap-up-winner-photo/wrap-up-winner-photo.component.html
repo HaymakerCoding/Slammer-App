@@ -1,0 +1,51 @@
+<div class="section-titles">
+  <h2>Winner Photo</h2>
+  <button mat-raised-button color="primary" (click)="showWinnerDialog(winnerDialog)" class="action-button">{{ winnerPhoto ? 'Change' : 'Add' }}</button>
+</div>
+<img *ngIf="winnerPhoto" src="{{ winnerPhoto }}" class="mx-auto d-block" style="width:50%; max-width:400px;">
+<p *ngIf="!winnerPhoto">No Winner Photo set</p>
+
+<ng-template #winnerDialog let-data>
+
+  <h3 mat-dialog-title>Event Winner</h3>
+  <mat-dialog-content>
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Image Upload Quality</mat-label>
+      <mat-select [value]="500" #performance>
+        <mat-option [value]="900">high - slower performance</mat-option>
+        <mat-option [value]="500">medium - default</mat-option>
+        <mat-option [value]="300">low - high performance</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <input #uploadInput style="display:none;" class="form-control" (change)="readImage($event, imageElement, performance.value)" type="file" accept="image/*">
+    <div class="row">
+      <div class="col-2 pt-2">
+        <mat-icon (click)="rotate(-90)">rotate_left</mat-icon>
+      </div>
+      <div class="col-8">
+        <button (click)="uploadInput.click()" class="btn mx-auto d-block btn-outline-secondary" style="width:140px;">Select Image</button>
+      </div>
+      <div class="col-2 pt-2">
+        <mat-icon (click)="rotate(90)">rotate_right</mat-icon>
+      </div>
+    </div>
+    <!--Cropper-->
+    <div class="row" style="max-height:500px;">
+      <div class="col-12">
+        <div class="img-container">
+          <img #imageElement [src]="" class="img-preview" (error)="previewImgError($event.target)">
+        </div>
+      </div>
+    </div>
+
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <div *ngIf="uploading === true">
+      <mat-spinner class="mx-auto d-block mt-2"></mat-spinner>
+      <h6 class="mt-2 text-center">Uploading...</h6>
+    </div>
+    <button *ngIf="uploading === false" mat-raised-button color="primary" (click)="save()">Crop and Save</button>
+    <button *ngIf="uploading === false" mat-raised-button color="primary" (click)="close()">Cancel</button>
+  </mat-dialog-actions>
+</ng-template>

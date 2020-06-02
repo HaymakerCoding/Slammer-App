@@ -1,0 +1,19 @@
+td{
+    color:navy;
+    min-width:20px;
+}
+th{
+    background-color:orange;
+    min-width:20px;
+    font-weight: bold;
+}
+tr.mat-header-row{
+    height:40px;
+}
+.clickable{
+    cursor:pointer;
+}
+.clickable:hover{
+    background-color: lime;
+    
+}

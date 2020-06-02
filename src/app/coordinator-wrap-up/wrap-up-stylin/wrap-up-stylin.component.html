@@ -1,0 +1,70 @@
+<div *ngIf="loading === false">
+  <div class="section-titles">
+    <h2>Most Style'n</h2>
+    <button mat-raised-button color="primary" (click)="showStyleDialog(styleDialog)" class="action-button">{{ mostStylin ? 'Change' : 'Add' }}</button>
+  </div>
+
+  <div *ngIf="mostStylin">
+    <h4 class="text-center mt-3">Winner: {{ mostStylin.fullName + ' (' + mostStylin.nickname + ')' }}</h4>
+    <img class="mx-auto d-block" [src]="mostStylin.pic">
+  </div>
+
+  <div *ngIf="!mostStylin">
+    <div class="text-center" style="display:flex; align-items: center; justify-content: center;">
+      <span style="font-size:22px;">No Winner </span>&nbsp;
+      <mat-icon>sentiment_very_dissatisfied</mat-icon>
+    </div>
+    <img class="sm-img mx-auto d-block" src="https://clubeg.golf/common/Events/most-stylin.jpg">
+  </div>
+</div>
+
+<ng-template #styleDialog let-data>
+  <h3 mat-dialog-title>Most Styln Winner</h3>
+  <mat-dialog-content>
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Image Quality - set before selecting image</mat-label>
+      <mat-select [value]="500" #performance>
+        <mat-option [value]="900">high - slower performance</mat-option>
+        <mat-option [value]="500">medium - default</mat-option>
+        <mat-option [value]="300">low - high performance</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Player</mat-label>
+      <mat-select #playerInput [value]="data ? +data.memberId : 'none'">
+        <mat-option [value]="player.slammerId" *ngFor="let player of allRegistered">{{ player.nickname }}</mat-option>
+        <mat-option [value]="'none'">None</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <input #uploadInput style="display:none;" class="form-control" (change)="readImage($event, imageElement, performance.value)" type="file" accept="image/*">
+    <div class="row">
+      <div class="col-2 pt-2">
+        <mat-icon (click)="rotate(-90)">rotate_left</mat-icon>
+      </div>
+      <div class="col-8">
+        <button (click)="uploadInput.click()" class="btn mx-auto d-block btn-outline-secondary" style="width:140px;">Select Image</button>
+      </div>
+      <div class="col-2 pt-2">
+        <mat-icon (click)="rotate(90)">rotate_right</mat-icon>
+      </div>
+    </div>
+    <!--Cropper-->
+    <div class="row">
+      <div class="col-12">
+        <div class="img-container">
+          <img #imageElement [src]="" (error)="previewImgError($event.target)">
+          <p *ngIf="!imageElement.src">No image selected yet</p>
+        </div>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <div *ngIf="uploading === true">
+      <mat-spinner class="mx-auto d-block mt-2"></mat-spinner>
+      <h6 class="mt-2 text-center">Uploading...</h6>
+    </div>
+    <button mat-raised-button *ngIf="uploading === false" color="primary" (click)="save(playerInput.value)">Crop and Save</button>
+    <button mat-raised-button *ngIf="uploading === false && data" color="primary" (click)="delete(data)">Delete</button>
+    <button mat-raised-button *ngIf="uploading === false" color="primary" (click)="close()">Cancel</button>
+  </mat-dialog-actions>
+</ng-template>

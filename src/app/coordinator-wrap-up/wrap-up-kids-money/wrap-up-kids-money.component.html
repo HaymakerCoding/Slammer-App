@@ -1,0 +1,25 @@
+<div class="section-titles">
+  <h2>Kids Money</h2>
+  <button class="action-button" mat-raised-button color="primary" (click)="openDialog(moneyDialog)">
+   {{ !kidsMoney || kidsMoney === '0' ? 'Add' : 'Change' }}
+  </button>
+</div>
+
+<div class="text-center full-width">
+  <h3>${{ kidsMoney ? kidsMoney : 0 }}</h3>
+  <a href="https://new.slammertour.com/coordinator_app/kids_money_tracker.php">Kids Money Tracker</a>
+</div>
+
+<ng-template #moneyDialog>
+  <h3 mat-dialog-title>{{ !kidsMoney || kidsMoney === '0' ? 'Add Money' : 'Change Money' }}</h3>
+  <mat-form-field >
+    <mat-label>Amount</mat-label>
+    <span matPrefix class="mb-1">$&nbsp;</span>
+    <input matInput type="number" #moneyInput [(value)]="kidsMoney">
+    <span matSuffix>.00</span>
+  </mat-form-field>
+  <mat-dialog-actions>
+    <button mat-raised-button (click)="saveMoney(moneyInput.value)" color="primary">Save</button>
+    <button mat-raised-button (click)="close()" color="primary">Cancel</button>
+  </mat-dialog-actions>
+</ng-template>
