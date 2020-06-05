@@ -2,8 +2,6 @@ import { Component, OnInit, OnDestroy, Input, TemplateRef } from '@angular/core'
 import { Subscription } from 'rxjs';
 import { MatTableDataSource, MatDialog, MatDialogRef } from '@angular/material';
 import { BasicSlammerEvent } from '../../models/BasicSlammerEvent';
-import { EventService } from '../../services/event.service';
-import { PlayerScores } from '../../models/PlayerScores';
 import { DoggieService } from '../../services/doggie.service';
 import { BasicReg } from '../../models/BasicReg';
 
@@ -26,7 +24,6 @@ export class WrapUpDoggiesComponent implements OnInit, OnDestroy {
   holeSelected;
 
   constructor(
-    private evenService: EventService,
     private doggieService: DoggieService,
     private matDialog: MatDialog
   ) { }

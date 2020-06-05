@@ -25,6 +25,7 @@
       </thead>
       <!--live events go first-->
       <tbody>
+        <tr colspan="7">&nbsp;</tr>
         <tr *ngFor="let event of liveEvents" class="text-center clickable-rows" (click)="goToLiveEvent(event.id)">
           <td>{{ event.eventNum }}</td>
           <td class="live-rows" colspan="6">
@@ -32,8 +33,8 @@
             <span style="font-size:12px; margin-left:10px; margin-right:9px;">from</span>
             {{ event.courseName + ' today starting at ' + event.time + ' with OC ' + event.coordinatorName }}
           </td>
-
         </tr>
+        <tr colspan="7">&nbsp;</tr>
       </tbody>
       <tbody *ngFor="let monthEvent of monthEvents">
         <tr>

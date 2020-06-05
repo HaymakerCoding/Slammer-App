@@ -3,6 +3,7 @@ import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { PlayerScores } from '../models/PlayerScores';
 import { AuthService } from './auth.service';
+import { Group } from '../models/Group';
 
 @Injectable({
   providedIn: 'root'
@@ -42,10 +43,10 @@ export class ScoresService {
     );
   }
 
-  initScores(playerId, eventId) {
+  initScores(group: Group, eventId) {
     const headers = this.authService.getAuthHeader();
     const URL = 'https://clubeg.golf/common/api_REST/v1/slammer-tour/events/scores/init/index.php';
-    return this.http.post<any>(URL, { playerId, eventId }, { headers })
+    return this.http.post<any>(URL, { group, eventId }, { headers })
       .pipe(map(response => {
           return response;
       })

@@ -68,21 +68,6 @@ export class WrapUpScoresComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Initalize a record in the live scoring table for this player.
-   * Needed when they don't enter scores via app.
-   * @param slammerId Slammer Member ID
-   */
-  initScores(slammerId) {
-    this.subscriptions.push(this.scoreService.initScores(slammerId, this.eventSelected.id).subscribe(response => {
-      if (response.status === 201) {
-        window.location.reload(true);
-      } else {
-        console.error(response);
-      }
-    }));
-  }
-
-  /**
    * Check if a player has bailed by checking if in bailed members
    * @param slammerId Slammer ID, ie member ID on slammer tour db
    * @return boolean
@@ -187,9 +172,20 @@ export class WrapUpScoresComponent implements OnInit, OnDestroy {
     }
   }
 
-  initGroupScores(data) {
-    alert('WIP');
-    console.log(data);
+   /**
+   * Initalize a record in the live scoring table for all players in a group
+   * Needed when they don't enter scores via app.
+   * @param group Group of players
+   */
+  initGroupScores(group: Group) {
+    this.subscriptions.push(this.scoreService.initScores(group, this.eventSelected.id).subscribe(response => {
+      if (response.status === 201) {
+        this.getPlayerScores();
+        this.close();
+      } else {
+        console.error(response);
+      }
+    }));
   }
 
   close() {

@@ -29,22 +29,6 @@
   </table>
 </div>
 
-<!--DEPRICATED !?? Section to look for players with no scores
-<section *ngIf="playersWithNoScores.length > 0">
-  <hr>
-  <h4>Players with no scores yet</h4>
-  * Note you do not have to intialize these scores UNLESS they were not entered during the match
-  <div *ngFor="let player of playersWithNoScores; let i = index" class="row mt-2">
-    <div class="col-4">
-      {{ (i+1) + '. ' + player.nickname + ' (' + player.slammerId + ')' }}
-    </div>
-    <div class="col-4">
-      <button color="primary" (click)="initScores(player.slammerId)" mat-raised-button>Initialize Scores</button>
-    </div>
-  </div>
-</section>
--->
-
 <ng-template #scoresDialog let-data>
   <h1 *ngIf="data" mat-dialog-title>{{ 'Editing ' + data.nickname + '\'s Scores' }}</h1>
   <mat-dialog-content>
@@ -88,7 +72,9 @@
   <mat-dialog-content>
     <div>This group did not enter scores on the app.
       <br>Fix? (Initialize group scores to zero)</div>
-    <button mat-raised-button color="primary" (click)="initGroupScores(data)">Yes</button>
-
   </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-raised-button color="primary" (click)="initGroupScores(data)">Yes</button>
+    <button mat-raised-button color="primary" (click)="close()">No</button>
+  </mat-dialog-actions>
 </ng-template>

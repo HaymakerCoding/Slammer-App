@@ -11,6 +11,7 @@ import { PlayerScores } from '../../models/PlayerScores';
 import { MatSnackBar } from '@angular/material';
 import { DoggieService } from '../../services/doggie.service';
 import { DoggieWinner } from '../../coordinator-wrap-up/wrap-up-doggies/wrap-up-doggies.component';
+import { CMPCmatch } from 'src/app/models/CMPCmatch';
 
 /**
  * Main start page for the 'ST Live Scoring'.
@@ -41,8 +42,8 @@ export class MainComponent implements OnInit, OnDestroy {
   ranks: any;
   loadingRanks: boolean;
   doggieWinners: DoggieWinner[] = [];
-  CMPCsingles: any[];
-  CMPCdoubles: any[];
+  CMPCsingles: CMPCmatch[];
+  CMPCdoubles: CMPCmatch[];
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -56,8 +57,6 @@ export class MainComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.CMPCsingles = [];
-    this.CMPCdoubles = [];
     this.loadingPercentage = 0;
     this.loadingRanks = true;
     this.getId();
@@ -144,7 +143,6 @@ export class MainComponent implements OnInit, OnDestroy {
       if (response.status === 200) {
         this.loadingPercentage = 60;
         this.groups = response.payload;
-        console.log(this.groups);
         if (this.groups[0]) {
           this.selectedGroup = this.groups[0];
         }
@@ -255,9 +253,15 @@ export class MainComponent implements OnInit, OnDestroy {
     return rank;
   }
 
+  /**
+   * CMPC matches are special tournament matches.
+   * Fetch all matches that are flagged as CMPC. These can be single or doubles format, organize as such.
+   */
   getCMPCmatches() {
     this.subscriptions.push(this.eventService.getCMPCmatches(this.event.id.toString()).subscribe(response => {
       if (response.status === 200) {
+        this.CMPCsingles = [];
+        this.CMPCdoubles = [];
         const cmpcMatches: any[] = response.payload;
         cmpcMatches.forEach(match => {
           if (match.type === 'Singles') {
@@ -266,6 +270,7 @@ export class MainComponent implements OnInit, OnDestroy {
             this.CMPCdoubles.push(match);
           }
         });
+        console.log(this.CMPCdoubles);
         this.loadingPercentage = 90;
         this.getAllScores(false);
       } else {
@@ -330,7 +335,7 @@ export class MainComponent implements OnInit, OnDestroy {
    * @param playerId Player Slammer ID
    * @param hole hole number
    */
-  getHoleScore(playerId, hole)  {
+  getHoleScore(playerId, hole): number  {
     const playerScores = this.playerScores.find(x => +x.slammerId === +playerId);
     if (playerScores && playerScores.scores) {
       const score = playerScores.scores.find( x => x.hole === hole).score;
@@ -357,6 +362,60 @@ export class MainComponent implements OnInit, OnDestroy {
    */
   getMatchResult(playerId, groupNum) {
     return this.calcuteResult(this.groups.find(x => x.groupNum === groupNum).playerSelectedId, playerId);
+  }
+
+  /**
+   * Get results between 2 players, not involving a group in this scenario.
+   * @param player1id Any player
+   * @param player2id Any other player
+   */
+  getMatchResultCMPC(player1id: number, player2id: number) {
+    return this.calcuteResult(player1id, player2id);
+  }
+
+  /**
+   * Get status of holes complete between 2 players
+   * @param player1id player 1 slammer id
+   * @param player2id player 2 slammer id
+   */
+  getHolesComplete2players(player1id:number, player2id: number): number {
+    let holesComplete = 0;
+    let p1score: number;
+    let p2score: number;
+    for (const hole of this.holes) {
+      p1score = this.getHoleScore(player1id, hole);
+      p2score = this.getHoleScore(player2id, hole);
+      if (!p1score && !p2score ) {
+        return holesComplete;
+      } else {
+        holesComplete++;
+      }
+    }
+    return holesComplete;
+  }
+
+  /**
+   * Get status of holes complete in a DOUBLES CMPC specific match
+   * @param match CMPC match obj containing all players, 4 for doubles
+   */
+  getHolesCompleteCMPCdoubles(match: CMPCmatch) {
+    let holesComplete = 0;
+    let p1score: number;
+    let p2score: number;
+    let p3score: number;
+    let p4score: number;
+    for (const hole of this.holes) {
+      p1score = this.getHoleScore(match.player1id, hole);
+      p2score = this.getHoleScore(match.player2id, hole);
+      p3score = this.getHoleScore(match.player1partnerId, hole);
+      p4score = this.getHoleScore(match.player2partnerId, hole);
+      if (!p1score && !p2score && !p3score && !p4score ) {
+        return holesComplete;
+      } else {
+        holesComplete++;
+      }
+    }
+    return holesComplete;
   }
 
   /**
@@ -402,14 +461,19 @@ export class MainComponent implements OnInit, OnDestroy {
 
   /**
    * Get a result between 2 players up to a certain point.
+   * The lower score on the hole wins 1 point for that hole.
+   * If a player is up by more points than holes left than match is over result wise
    * @param holes An array of hole numbers for all holes up to the one currently selected
    * @param activePlayerNumber The group number for the selected player
    * @param opponentNumber The group number for the opponent comparing with
    */
-  calcuteResult(activePlayerNumber, opponentNumber) {
+  calcuteResult(activePlayerNumber: number, opponentNumber: number): string {
     let p1Total = 0;
     let p2Total = 0;
+    let holesLeftToPlay = 18;
+    let msg: string;
     for (const hole of this.holes) {
+      holesLeftToPlay--;
       const p1score = this.getHoleScore(activePlayerNumber, hole);
       const p2score = this.getHoleScore(opponentNumber, hole);
       if (p1score < p2score) {
@@ -417,6 +481,15 @@ export class MainComponent implements OnInit, OnDestroy {
       } else if (p2score < p1score) {
         p2Total++;
       }
+      if (hole === 18 && p1Total === p2Total && activePlayerNumber !== opponentNumber) {
+        return 'Draw';
+      } else if (hole === 18 && p1Total > p2Total && (p1Total - p2Total === 2)) {
+        return 'Won 2 up';
+      } else if (p1Total > (p2Total + holesLeftToPlay)) {
+        return 'Won ' + (p1Total - p2Total) + ' and ' + holesLeftToPlay;
+      } else if(p2Total > (p1Total + holesLeftToPlay)) {
+        return'Lost ' + (p2Total - p1Total) + ' and ' + holesLeftToPlay;
+      } 
     }
     const difference = p1Total > p2Total ? (p1Total - p2Total) : p2Total > p1Total ? (p2Total - p1Total) : 0;
     if (activePlayerNumber === opponentNumber) {
@@ -446,24 +519,24 @@ export class MainComponent implements OnInit, OnDestroy {
    * Use the CMPC match central ID to find the grouped member and return their nickname
    * @param centralId Member ID in central member table
    */
-  getCMPCplayerName(centralId) {
-    let nickname: string = null;
+  getCMPCplayerName(centralId: number): string {
+    let fullName: string = null;
     this.groups.forEach(group => {
       if (+group.player1id === +centralId) {
-        nickname = group.player1nickname;
+        fullName = group.player1name;
         return;
       } else if (+group.player2id === +centralId) {
-        nickname = group.player2nickname;
+        fullName = group.player2name;
         return;
       } else if (+group.player3id === +centralId) {
-        nickname = group.player3nickname;
+        fullName = group.player3name;
         return;
       } else if (+group.player4id === +centralId) {
-        nickname = group.player4nickname;
+        fullName = group.player4name;
         return;
       }
     });
-    return nickname;
+    return fullName;
   }
 
   /**
@@ -487,6 +560,36 @@ export class MainComponent implements OnInit, OnDestroy {
       }
     });
     return centralId;
+  }
+
+  /**
+   * Get results of a match between doubles.
+   * player 1 and player2(parnters) scores are added together for each hole and compared against player 3 and 4(partners).
+   * The team with lower score for the hole gets the point for that hole
+   * @param match CMPM match obj containing all 4 doubles players
+   */
+  getMatchResultCMPCdoubles(match: CMPCmatch, pair: number) {
+    let pair1Total = 0;
+    let pair2Total = 0;
+    for (const hole of this.holes) {
+      const pair1score = this.getHoleScore(match.player1id, hole) + this.getHoleScore(match.player1partnerId, hole);
+      const pair2score = this.getHoleScore(match.player2id, hole) + this.getHoleScore(match.player2partnerId, hole);
+      if (pair1score < pair2score) {
+        pair1Total++;
+      } else if (pair2score < pair1score) {
+        pair2Total++;
+      }
+    }
+    const difference = pair1Total > pair2Total ? (pair1Total - pair2Total) : pair2Total > pair1Total ? (pair2Total - pair1Total) : 0;
+    if (pair1Total === pair2Total) {
+      return 'All Square';
+    } else {
+      if (pair === 1) {
+        return pair1Total < pair2Total ? difference + ' Up' : difference + ' Down';
+      } else {
+        return pair2Total < pair1Total ? difference + ' Up' : difference + ' Down';
+      }
+    }
   }
 
 
