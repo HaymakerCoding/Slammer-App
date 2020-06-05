@@ -15,7 +15,7 @@ export class WrapUpWinnerPhotoComponent implements OnInit, OnDestroy {
 
   @Input() eventSelected: BasicSlammerEvent;
   @Input() allRegistered: BasicReg[];
-  @ViewChild('imageElement', { static: false }) imageElement: ElementRef;
+  @ViewChild('imageElement') imageElement: ElementRef;
 
   winnerPhoto;
   private MAXFILESIZE = 5000000; // 5MB limit
