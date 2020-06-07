@@ -149,4 +149,14 @@ export class EventService {
     );
   }
 
+  /**
+   * Get the current doggie sponsor
+   */
+  getDoggieSponsor() {
+    return this.http.get<any>('https://clubeg.golf/common/api_REST/v1/slammer-tour/events/get-current-doggie-sponsor/index.php')
+      .pipe(map(response => {
+        return response;
+    }));
+  }
+
 }

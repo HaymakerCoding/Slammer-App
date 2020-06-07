@@ -7,6 +7,18 @@
     padding:10px;
     border-bottom: 1px solid lightgray;
 }
+.doggie-table{
+    background-color:#fff8dc;
+    color:navy;
+    max-width: 400px;
+    margin:auto;
+}
+.doggie-table > thead > tr > th {
+    font-weight: bold;
+}
+.doggie-sponsor-logo{
+    width:100px;
+}
 .versus-row{
     background-color:#fff8dc;
     color:#ff8c00;
@@ -30,13 +42,7 @@
 .orange-field{
     border-top:2px solid #ff8c00; border-bottom: 1px solid #ff8c00;
 }
-.doggie-hole-text{
-    background-color:orange;
-    color:navy;
-    font-size:20px;
-    padding:10px;
-    margin-bottom:4px;
-}
+
 .results-field{
     background-color:#fff8dc;
     font-weight:500;

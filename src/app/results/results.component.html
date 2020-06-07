@@ -1,0 +1,13 @@
+<div class="container">
+
+    <div *ngIf="loadingPercentage < 100">
+        <mat-progress-bar value="{{ loadingPercentage }}" color="primary" mode="determinate"></mat-progress-bar>
+        <div class="full-width text-center mt-2">Loading</div>
+    </div>
+    <div *ngIf="loadingPercentage === 100">
+        <h1>{{ event.name }}</h1>
+        <div>{{ event.date | date }}</div>
+        <div>{{ 'Coordinator: ' + event.coordinatorName }}</div>
+    </div>
+    
+</div>

@@ -30,6 +30,7 @@ import { WrapUpKidsMoneyComponent } from './coordinator-wrap-up/wrap-up-kids-mon
 import { WrapUpSummariesComponent } from './coordinator-wrap-up/wrap-up-summaries/wrap-up-summaries.component';
 import { MainComponent } from './live-results/main/main.component';
 import { EventResultsTableComponent } from './event-results-table/event-results-table.component';
+import { ResultsComponent } from './results/results.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { EventResultsTableComponent } from './event-results-table/event-results-
     WrapUpKidsMoneyComponent,
     WrapUpSummariesComponent,
     MainComponent,
-    EventResultsTableComponent
+    EventResultsTableComponent,
+    ResultsComponent
   ],
   imports: [
     BrowserModule,

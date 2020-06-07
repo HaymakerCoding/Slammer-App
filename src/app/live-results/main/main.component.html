@@ -67,12 +67,26 @@
 
     <div class="mt-5 mb-5" style="height:5px; width:80%; border: 1px solid; margin-right:10%; margin-left:10%; border-radius:2px; background-color:#ff8c00;"></div>
 
-    <h2 class="text-center">Doggie Results</h2>
+    <!--Doggie Section-->
+    <h2 class="text-center">{{ doggieSponsor.name + ' Doggies' }}</h2>
+    <img class="mx-auto d-block doggie-sponsor-logo" [src]="doggieSponsor.logo">
     <section class="mt-3">
-      <div class="row" *ngFor="let par of doggiePars">
-        <div class="col-6 col-md-4 offset-md-2 doggie-hole-text orange-field">Hole #{{ par.hole }}</div>
-        <div class="col-6 col-md-4 doggie-results-text">{{ getDoggieWinner(par.hole) }}</div>
-      </div>
+      <table class="table table-small doggie-table">
+        <thead>
+          <tr>
+            <th class="text-center">Hole</th>
+            <th class="text-left">Slammer</th>
+            <th class="text-center">Distance</th>
+          </tr>
+        </thead>
+        <tbody >
+          <tr *ngFor="let par of doggiePars">
+            <td class="text-center">{{ par.hole }}</td>
+            <td class="text-left">{{ getDoggieWinner(par.hole) }}</td>
+            <td class="text-center">{{ getDoggieWinnerDistance(par.hole) }}</td>
+          </tr>
+        </tbody>
+      </table>
     </section>
 
     <div class="mt-5 mb-5" style="height:5px; width:80%; border: 1px solid; margin-right:10%; margin-left:10%; border-radius:2px; background-color:#ff8c00;"></div>
@@ -82,8 +96,9 @@
     <!--SINGLES CMPC MATCHS-->
     <section>
       <h3 class="grey-text small-text">Singles</h3>
+      <p *ngIf="CMPCsingles.length < 1">No singles CMPC matches today</p>
       <div *ngFor="let match of CMPCsingles">
-        <h4>{{ match.division + ' Match' }}</h4>
+        <h4>{{ match.division + ' - Round ' + match.round }}</h4>
         <table class="table full-width" style="min-width:100%">
           <thead style="border-left:2px solid #ff8c00;">
             <tr style="background-color:orange;">
@@ -120,8 +135,9 @@
     <!--Doubles CMPC MATCHES-->
     <section>
       <h3 class="grey-text small-text">Doubles</h3>
+      <p *ngIf="CMPCdoubles.length < 1">No doubles CMPC matches today</p>
       <div *ngFor="let match of CMPCdoubles">
-        <h4>{{ match.division + ' Match' }}</h4>
+        <h4>{{ match.division + ' - Round ' + match.round }}</h4>
         <table class="table full-width" style="min-width:100%">
           <thead style="border-left:2px solid #ff8c00;">
             <tr style="background-color:orange;">

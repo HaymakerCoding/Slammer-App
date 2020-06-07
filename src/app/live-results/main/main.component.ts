@@ -12,6 +12,7 @@ import { MatSnackBar } from '@angular/material';
 import { DoggieService } from '../../services/doggie.service';
 import { DoggieWinner } from '../../coordinator-wrap-up/wrap-up-doggies/wrap-up-doggies.component';
 import { CMPCmatch } from 'src/app/models/CMPCmatch';
+import { Sponsor } from 'src/app/models/Sponsor';
 
 /**
  * Main start page for the 'ST Live Scoring'.
@@ -44,6 +45,7 @@ export class MainComponent implements OnInit, OnDestroy {
   doggieWinners: DoggieWinner[] = [];
   CMPCsingles: CMPCmatch[];
   CMPCdoubles: CMPCmatch[];
+  doggieSponsor: Sponsor;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -171,7 +173,24 @@ export class MainComponent implements OnInit, OnDestroy {
       }
     });
     this.loadingPercentage = 70;
-    this.getPars();
+    this.getSponsor();
+  }
+
+  /**
+   * Only 1 sponsor set for doggies at a time. Retrive the set sponsor.
+   * For displaying promotional name and logo with doggie results
+   */
+  getSponsor() {
+    this.subscriptions.push(this.eventService.getDoggieSponsor().subscribe(response => {
+      if (response.status === 200) {
+        this.doggieSponsor = response.payload;
+        console.log(this.doggieSponsor);
+        this.loadingPercentage = 75;
+        this.getPars();
+      } else {
+        console.error(response);
+      }
+    }));
   }
 
   /**
@@ -451,6 +470,22 @@ export class MainComponent implements OnInit, OnDestroy {
     return holesComplete;
   }
 
+  getHolesCompleteByPlayer(playerId: number) {
+    let holesComplete = 0;
+    let pscore;
+    for (const hole of this.holes) {
+      if (playerId) {
+        pscore = this.getHoleScore(playerId, hole);
+      }
+      if (!pscore) {
+        return holesComplete;
+      } else {
+        holesComplete++;
+      }
+    }
+    return holesComplete;
+  }
+
   /**
    * Get par for a hole
    * @param hole Hole number
@@ -473,17 +508,17 @@ export class MainComponent implements OnInit, OnDestroy {
     let holesLeftToPlay = 18;
     let msg: string;
     for (const hole of this.holes) {
-      holesLeftToPlay--;
-      const p1score = this.getHoleScore(activePlayerNumber, hole);
-      const p2score = this.getHoleScore(opponentNumber, hole);
+      holesLeftToPlay = 18 - this.getHolesCompleteByPlayer(activePlayerNumber);
+      const p1score: number = +this.getHoleScore(activePlayerNumber, hole);
+      const p2score: number = +this.getHoleScore(opponentNumber, hole);
       if (p1score < p2score) {
         p1Total++;
       } else if (p2score < p1score) {
         p2Total++;
       }
-      if (hole === 18 && p1Total === p2Total && activePlayerNumber !== opponentNumber) {
+      if (holesLeftToPlay === 0 && p1Total === p2Total && activePlayerNumber !== opponentNumber) {
         return 'Draw';
-      } else if (hole === 18 && p1Total > p2Total && (p1Total - p2Total === 2)) {
+      } else if (holesLeftToPlay === 0 && p1Total > p2Total && (p1Total - p2Total === 2)) {
         return 'Won 2 up';
       } else if (p1Total > (p2Total + holesLeftToPlay)) {
         return 'Won ' + (p1Total - p2Total) + ' and ' + holesLeftToPlay;
@@ -506,12 +541,21 @@ export class MainComponent implements OnInit, OnDestroy {
    * If set, return name of a doggie winner on a specific hole
    * @param hole Hole number
    */
-  getDoggieWinner(hole) {
+  getDoggieWinner(hole: number) {
     const winner: DoggieWinner = this.doggieWinners.find(x => +x.hole === +hole);
     if (winner && winner.name) {
       return winner.name;
     } else {
       return 'practice up!';
+    }
+  }
+
+  getDoggieWinnerDistance(hole: number) {
+    const winner: DoggieWinner = this.doggieWinners.find(x => +x.hole === +hole);
+    if (winner && winner.distance) {
+      return winner.distance + ' feet';
+    } else {
+      return null;
     }
   }
 
@@ -571,23 +615,42 @@ export class MainComponent implements OnInit, OnDestroy {
   getMatchResultCMPCdoubles(match: CMPCmatch, pair: number) {
     let pair1Total = 0;
     let pair2Total = 0;
+    let holesLeftToPlay = 18;
     for (const hole of this.holes) {
-      const pair1score = this.getHoleScore(match.player1id, hole) + this.getHoleScore(match.player1partnerId, hole);
-      const pair2score = this.getHoleScore(match.player2id, hole) + this.getHoleScore(match.player2partnerId, hole);
+      holesLeftToPlay = 18 - this.getHolesCompleteByPlayer(match.player1id);
+      const pair1score = +this.getHoleScore(match.player1id, hole) + +this.getHoleScore(match.player1partnerId, hole);
+      const pair2score = +this.getHoleScore(match.player2id, hole) + +this.getHoleScore(match.player2partnerId, hole);
       if (pair1score < pair2score) {
         pair1Total++;
       } else if (pair2score < pair1score) {
         pair2Total++;
       }
+      if (holesLeftToPlay === 0 && pair1Total === pair2Total) {
+        return 'Draw';
+      } else if (holesLeftToPlay === 0 && pair1Total > pair2Total && (pair1Total - pair2Total === 2)) {
+        return 'Won 2 up';
+      } else if (pair1Total > (pair2Total + holesLeftToPlay)) {
+        if (pair === 1) {
+          return 'Won ' + (pair1Total - pair2Total) + ' and ' + holesLeftToPlay;
+        } else {
+          return'Lost ' + (pair1Total - pair2Total) + ' and ' + holesLeftToPlay;
+        }
+      } else if(pair2Total > (pair1Total + holesLeftToPlay)) {
+        if (pair === 1) {
+          return'Lost ' + (pair2Total - pair1Total) + ' and ' + holesLeftToPlay;
+        } else {
+          return 'Won ' + (pair2Total - pair1Total) + ' and ' + holesLeftToPlay;
+        }
+      } 
     }
     const difference = pair1Total > pair2Total ? (pair1Total - pair2Total) : pair2Total > pair1Total ? (pair2Total - pair1Total) : 0;
     if (pair1Total === pair2Total) {
       return 'All Square';
     } else {
       if (pair === 1) {
-        return pair1Total < pair2Total ? difference + ' Up' : difference + ' Down';
+        return pair1Total > pair2Total ? difference + ' Up' : difference + ' Down';
       } else {
-        return pair2Total < pair1Total ? difference + ' Up' : difference + ' Down';
+        return pair2Total > pair1Total ? difference + ' Up' : difference + ' Down';
       }
     }
   }
