@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, TemplateRef, OnDestroy } from '@angular/core';
 import { AllQuotes } from '../../models/AllQuotes';
-import { MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { QuoteService } from '../../services/quote.service';
 import { Subscription } from 'rxjs';
 import { BasicSlammerEvent } from '../../models/BasicSlammerEvent';

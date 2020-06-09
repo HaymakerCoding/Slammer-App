@@ -8,7 +8,7 @@ import { RegistrationService } from '../../services/registration.service';
 import { Group } from '../../models/Group';
 import { ScoresService } from '../../services/scores.service';
 import { PlayerScores } from '../../models/PlayerScores';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { DoggieService } from '../../services/doggie.service';
 import { DoggieWinner } from '../../coordinator-wrap-up/wrap-up-doggies/wrap-up-doggies.component';
 import { CMPCmatch } from 'src/app/models/CMPCmatch';

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, OnDestroy, TemplateRef, ViewChild, ElementRef } from '@angular/core';
 import { BasicSlammerEvent } from '../../models/BasicSlammerEvent';
-import { MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { WinnerPhotoService } from '../../services/winner-photo.service';
 import { BasicReg } from '../../models/BasicReg';

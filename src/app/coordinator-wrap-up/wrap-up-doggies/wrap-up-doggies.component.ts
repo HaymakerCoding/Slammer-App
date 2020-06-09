@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, Input, TemplateRef } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { MatTableDataSource, MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
 import { BasicSlammerEvent } from '../../models/BasicSlammerEvent';
 import { DoggieService } from '../../services/doggie.service';
 import { BasicReg } from '../../models/BasicReg';

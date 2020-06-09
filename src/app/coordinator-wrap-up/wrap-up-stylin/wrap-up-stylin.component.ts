@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs';
 import { MostStylinService } from '../../services/most-stylin.service';
 import { BasicSlammerEvent } from '../../models/BasicSlammerEvent';
 import { MostStylinWinner } from '../../models/MostStylinWinner';
-import { MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import Cropper from 'cropperjs';
 import { BasicReg } from '../../models/BasicReg';
 

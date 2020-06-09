@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, TemplateRef, ViewChild, AfterViewInit } f
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../services/auth.service';
-import { MatDialogRef, MatDialog } from '@angular/material';
+import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 
 @Component({

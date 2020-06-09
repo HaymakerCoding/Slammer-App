@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, TemplateRef, ViewChildren, QueryList, ElementRef, OnDestroy } from '@angular/core';
 import { PlayerScores } from '../../models/PlayerScores';
-import { MatTableDataSource, MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
 import { BasicSlammerEvent } from '../../models/BasicSlammerEvent';
 import { ScoresService } from '../../services/scores.service';
 import { Subscription } from 'rxjs';

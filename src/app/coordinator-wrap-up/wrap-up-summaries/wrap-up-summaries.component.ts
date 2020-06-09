@@ -3,7 +3,7 @@ import { SummaryService } from '../../services/summary.service';
 import { Subscription } from 'rxjs';
 import { BasicSlammerEvent } from '../../models/BasicSlammerEvent';
 import { EventSummaries } from '../../models/EventSummaries';
-import { MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-wrap-up-summaries',
