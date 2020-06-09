@@ -16,7 +16,7 @@ import { Sponsor } from 'src/app/models/Sponsor';
 
 /**
  * Main start page for the 'ST Live Scoring'.
- * Allows public to view up to date states for a golf event
+ * Allows public to view up to date states for a golf event. 
  *
  * @author Malcolm Roy
  */
@@ -316,8 +316,6 @@ export class MainComponent implements OnInit, OnDestroy {
     }));
   }
 
-
-
   /**
    * Initialize all the POSSIBLE Doggie winners. determined by holes where par is 3.
    */
@@ -508,23 +506,25 @@ export class MainComponent implements OnInit, OnDestroy {
     let holesLeftToPlay = 18;
     let msg: string;
     for (const hole of this.holes) {
-      holesLeftToPlay = 18 - this.getHolesCompleteByPlayer(activePlayerNumber);
-      const p1score: number = +this.getHoleScore(activePlayerNumber, hole);
-      const p2score: number = +this.getHoleScore(opponentNumber, hole);
-      if (p1score < p2score) {
-        p1Total++;
-      } else if (p2score < p1score) {
-        p2Total++;
+      if (hole <= this.getHolesCompleteByPlayer(activePlayerNumber)) {
+        holesLeftToPlay = 18 - hole;
+        const p1score: number = +this.getHoleScore(activePlayerNumber, hole);
+        const p2score: number = +this.getHoleScore(opponentNumber, hole);
+        if (p1score < p2score) {
+          p1Total++;
+        } else if (p2score < p1score) {
+          p2Total++;
+        }
+        if (holesLeftToPlay === 0 && p1Total === p2Total && activePlayerNumber !== opponentNumber) {
+          return 'Draw';
+        } else if (holesLeftToPlay === 0 && p1Total > p2Total && (p1Total - p2Total === 2)) {
+          return 'Won 2 up';
+        } else if (p1Total > (p2Total + holesLeftToPlay)) {
+          return 'Won ' + (p1Total - p2Total) + ' and ' + holesLeftToPlay;
+        } else if(p2Total > (p1Total + holesLeftToPlay)) {
+          return'Lost ' + (p2Total - p1Total) + ' and ' + holesLeftToPlay;
+        } 
       }
-      if (holesLeftToPlay === 0 && p1Total === p2Total && activePlayerNumber !== opponentNumber) {
-        return 'Draw';
-      } else if (holesLeftToPlay === 0 && p1Total > p2Total && (p1Total - p2Total === 2)) {
-        return 'Won 2 up';
-      } else if (p1Total > (p2Total + holesLeftToPlay)) {
-        return 'Won ' + (p1Total - p2Total) + ' and ' + holesLeftToPlay;
-      } else if(p2Total > (p1Total + holesLeftToPlay)) {
-        return'Lost ' + (p2Total - p1Total) + ' and ' + holesLeftToPlay;
-      } 
     }
     const difference = p1Total > p2Total ? (p1Total - p2Total) : p2Total > p1Total ? (p2Total - p1Total) : 0;
     if (activePlayerNumber === opponentNumber) {
@@ -617,31 +617,33 @@ export class MainComponent implements OnInit, OnDestroy {
     let pair2Total = 0;
     let holesLeftToPlay = 18;
     for (const hole of this.holes) {
-      holesLeftToPlay = 18 - this.getHolesCompleteByPlayer(match.player1id);
-      const pair1score = +this.getHoleScore(match.player1id, hole) + +this.getHoleScore(match.player1partnerId, hole);
-      const pair2score = +this.getHoleScore(match.player2id, hole) + +this.getHoleScore(match.player2partnerId, hole);
-      if (pair1score < pair2score) {
-        pair1Total++;
-      } else if (pair2score < pair1score) {
-        pair2Total++;
+      holesLeftToPlay = 18 - +hole;
+      if (hole <= this.getHolesCompleteByPlayer(match.player1id)) {
+        const pair1score = +this.getHoleScore(match.player1id, hole) + +this.getHoleScore(match.player1partnerId, hole);
+        const pair2score = +this.getHoleScore(match.player2id, hole) + +this.getHoleScore(match.player2partnerId, hole);
+        if (pair1score < pair2score) {
+          pair1Total++;
+        } else if (pair2score < pair1score) {
+          pair2Total++;
+        }
+        if (holesLeftToPlay === 0 && pair1Total === pair2Total) {
+          return 'Draw';
+        } else if (holesLeftToPlay === 0 && pair1Total > pair2Total && (pair1Total - pair2Total === 2)) {
+          return 'Won 2 up';
+        } else if (pair1Total > (+pair2Total + +holesLeftToPlay)) {
+          if (pair === 1) {
+            return 'Won ' + (pair1Total - pair2Total) + ' and ' + holesLeftToPlay;
+          } else {
+            return'Lost ' + (pair1Total - pair2Total) + ' and ' + holesLeftToPlay;
+          }
+        } else if(pair2Total > (+pair1Total + +holesLeftToPlay)) {
+          if (pair === 1) {
+            return'Lost ' + (pair2Total - pair1Total) + ' and ' + holesLeftToPlay;
+          } else {
+            return 'Won ' + (pair2Total - pair1Total) + ' and ' + holesLeftToPlay;
+          }
+        }
       }
-      if (holesLeftToPlay === 0 && pair1Total === pair2Total) {
-        return 'Draw';
-      } else if (holesLeftToPlay === 0 && pair1Total > pair2Total && (pair1Total - pair2Total === 2)) {
-        return 'Won 2 up';
-      } else if (pair1Total > (pair2Total + holesLeftToPlay)) {
-        if (pair === 1) {
-          return 'Won ' + (pair1Total - pair2Total) + ' and ' + holesLeftToPlay;
-        } else {
-          return'Lost ' + (pair1Total - pair2Total) + ' and ' + holesLeftToPlay;
-        }
-      } else if(pair2Total > (pair1Total + holesLeftToPlay)) {
-        if (pair === 1) {
-          return'Lost ' + (pair2Total - pair1Total) + ' and ' + holesLeftToPlay;
-        } else {
-          return 'Won ' + (pair2Total - pair1Total) + ' and ' + holesLeftToPlay;
-        }
-      } 
     }
     const difference = pair1Total > pair2Total ? (pair1Total - pair2Total) : pair2Total > pair1Total ? (pair2Total - pair1Total) : 0;
     if (pair1Total === pair2Total) {
@@ -667,5 +669,4 @@ interface HolePars {
   hole: number;
   par: number;
 }
-
 
