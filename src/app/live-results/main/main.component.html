@@ -1,5 +1,9 @@
 <div class="container-fluid pl-5 pr-5 pb-5 pt-2">
 
+  <div *ngIf="loadingPercentage < 100">
+    <mat-progress-bar value="{{ loadingPercentage }}" color="primary" mode="determinate"></mat-progress-bar>
+    <div class="full-width text-center mt-2">Loading</div>
+  </div>
   <div *ngIf="loadingPercentage === 100" class="inner-container">
     <br>
     <section class="info-section">

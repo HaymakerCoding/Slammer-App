@@ -496,6 +496,7 @@ export class MainComponent implements OnInit, OnDestroy {
    * Get a result between 2 players up to a certain point.
    * The lower score on the hole wins 1 point for that hole.
    * If a player is up by more points than holes left than match is over result wise
+   * Point of view (returned data) is from the activePlayerNumber
    * @param holes An array of hole numbers for all holes up to the one currently selected
    * @param activePlayerNumber The group number for the selected player
    * @param opponentNumber The group number for the opponent comparing with
@@ -519,6 +520,12 @@ export class MainComponent implements OnInit, OnDestroy {
           return 'Draw';
         } else if (holesLeftToPlay === 0 && p1Total > p2Total && (p1Total - p2Total === 2)) {
           return 'Won 2 up';
+        } else if (holesLeftToPlay === 0 && p1Total > p2Total && (p1Total - p2Total === 1)) {
+          return 'Won 1 up';
+        } else if (holesLeftToPlay === 0 && p2Total > p1Total && (p2Total - p1Total === 2)) {
+          return 'Lost 2 down';
+        } else if (holesLeftToPlay === 0 && p2Total > p1Total && (p2Total - p1Total === 1)) {
+          return 'Lost 1 down';
         } else if (p1Total > (p2Total + holesLeftToPlay)) {
           return 'Won ' + (p1Total - p2Total) + ' and ' + holesLeftToPlay;
         } else if(p2Total > (p1Total + holesLeftToPlay)) {
@@ -546,7 +553,7 @@ export class MainComponent implements OnInit, OnDestroy {
     if (winner && winner.name) {
       return winner.name;
     } else {
-      return 'practice up!';
+      return 'Who will it be?';
     }
   }
 
@@ -611,6 +618,7 @@ export class MainComponent implements OnInit, OnDestroy {
    * player 1 and player2(parnters) scores are added together for each hole and compared against player 3 and 4(partners).
    * The team with lower score for the hole gets the point for that hole
    * @param match CMPM match obj containing all 4 doubles players
+   * @param pair Deal with perspective as to which team we are returning the result for.
    */
   getMatchResultCMPCdoubles(match: CMPCmatch, pair: number) {
     let pair1Total = 0;
@@ -629,7 +637,17 @@ export class MainComponent implements OnInit, OnDestroy {
         if (holesLeftToPlay === 0 && pair1Total === pair2Total) {
           return 'Draw';
         } else if (holesLeftToPlay === 0 && pair1Total > pair2Total && (pair1Total - pair2Total === 2)) {
-          return 'Won 2 up';
+          if (pair === 1) {
+            return 'Won 2 up';
+          } else {
+            return 'Lost 2 down';
+          }
+        } else if (holesLeftToPlay === 0 && pair1Total > pair2Total && (pair1Total - pair2Total === 1)) {
+          if (pair === 1) {
+            return 'Won 1 up';
+          } else {
+            return 'Lost 1 down';
+          }
         } else if (pair1Total > (+pair2Total + +holesLeftToPlay)) {
           if (pair === 1) {
             return 'Won ' + (pair1Total - pair2Total) + ' and ' + holesLeftToPlay;
