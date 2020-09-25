@@ -24,7 +24,7 @@
         </tr>
       </thead>
       <!--live events go first-->
-      <tbody>
+      <tbody *ngIf="liveEvents.length > 0">
         <tr colspan="7">&nbsp;</tr>
         <tr *ngFor="let event of liveEvents" class="text-center clickable-rows" (click)="goToLiveEvent(event.id)">
           <td>{{ event.eventNum }}</td>

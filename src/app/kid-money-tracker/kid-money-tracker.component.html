@@ -1,0 +1,102 @@
+<div class="container pb-4 pt-4">
+    <h1>Kids Money Tracker</h1>
+    <button (click)="loginToEditMoney()" class="mb-3" mat-raised-button color="primary">Login</button>
+    
+    <div *ngIf="loadingPercent < 100">
+        <mat-progress-bar value="{{ loadingPercent }}" color="primary" mode="determinate"></mat-progress-bar>
+        <div class="full-width text-center mt-2">Loading</div>
+    </div>
+    <div *ngIf="loadingPercent === 100">
+        <mat-form-field appearance="outline">
+            <mat-label>Season</mat-label>
+            <mat-select (selectionChange)="onSeasonChange()" [(ngModel)]="seasonSelected">
+                <mat-option *ngFor="let season of seasons" [value]="+season">{{ season }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <h2 class="blue-gradient">Coordintor Yearly Totals</h2>
+        <div class="row" *ngFor="let money of kidsMoney">
+            <div class="col-6">{{ money.coordinator }}</div>
+            <div class="col-6">$ {{ getTotal(money) }}</div>
+        </div>
+    <hr>
+    <h2>Coordinator Breakdown</h2>
+    <div *ngFor="let money of kidsMoney">
+        <h3 class="slammer-gradient p-2">{{ money.coordinator }}</h3>
+        <div class="row">
+            <div class="col-6">
+                <table class="table table-sm">
+                    <thead>
+                        <tr class="blue-gradient">
+                            <th>Event</th>
+                            <th class="text-center">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let event of money.events">
+                            <td>{{ event.eventName + ' ' + event.eventDate  }}</td>
+                            <td class="text-center">$ {{ event.moneyRaised }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-6">
+                <div class="row">
+                    <div class="col-12 col-md-4 text-center">
+                        <h5 class="grey-text mt-3"><b>Total</b></h5>
+                        <hr>
+                        <div class="text-center">$ {{ getTotal(money) }}</div>
+                    </div>
+                    <div class="col-12 col-md-4 text-center">
+                        <h5 class="grey-text mt-3"><b>Payments</b></h5>
+                        <hr>
+                        <div *ngIf="money.payments.length < 1">0</div>
+                        <ol>
+                            <li *ngFor="let payment of money.payments">
+                                $ {{ payment.amount }}
+                                <mat-icon *ngIf="admin === true" (click)="showEditMoney(money, payment, editMoneyDialog)" class="ml-4">edit</mat-icon>
+                            </li>
+                        </ol>
+                        <button *ngIf="admin === true" (click)="showAddMoney(addMoneyDialog, money)" mat-raised-button color="primary">Add</button>
+                    </div>
+                    <div class="col-12 col-md-4 text-center">
+                        <h5 class="grey-text mt-3"><b>Balance Payable</b></h5>
+                        <hr>
+                        <div>$ {{ getBalance(money) }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+    </div>
+
+    <ng-template let-data #addMoneyDialog>
+        <h3 mat-dialog-title>Add Payment For {{ data.coordinator }}</h3>
+        <mat-dialog-content>
+            <mat-form-field appearance="outline">
+                <mat-label>Amount</mat-label>
+                <input matInput #amountInput>
+            </mat-form-field>
+        </mat-dialog-content>
+        <mat-dialog-actions>
+            <button (click)="addPayment(data, amountInput.value)" mat-raised-button color="primary">Save</button>
+            <button (click)="close()" mat-raised-button color="primary">Cancel</button>
+        </mat-dialog-actions>
+    </ng-template>
+
+    <ng-template let-data #editMoneyDialog>
+        <h3 mat-dialog-title>Edit Payment For {{ data.coordinator }}</h3>
+        <mat-dialog-content>
+            <mat-form-field appearance="outline">
+                <mat-label>Amount</mat-label>
+                <input [(ngModel)]="data.payment.amount" matInput #amountInput>
+            </mat-form-field>
+        </mat-dialog-content>
+        <mat-dialog-actions>
+            <button (click)="updatePayment(data.payment)" mat-raised-button color="primary">Save Changes</button>
+            <button (click)="deletePayment(data.payment, data.money)" mat-raised-button color="primary">Delete</button>
+            <button (click)="close()" mat-raised-button color="primary">Cancel</button>
+        </mat-dialog-actions>
+    </ng-template>
+
+</div>

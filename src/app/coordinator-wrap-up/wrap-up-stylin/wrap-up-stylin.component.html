@@ -21,14 +21,16 @@
 <ng-template #styleDialog let-data>
   <h3 mat-dialog-title>Most Styln Winner</h3>
   <mat-dialog-content>
+    <!--
     <mat-form-field class="full-width" appearance="outline">
-      <mat-label>Image Quality - set before selecting image</mat-label>
-      <mat-select [value]="500" #performance>
-        <mat-option [value]="900">high - slower performance</mat-option>
-        <mat-option [value]="500">medium - default</mat-option>
-        <mat-option [value]="300">low - high performance</mat-option>
+      <mat-label>Image Quality</mat-label>
+      <mat-select [(ngModel)]="uploadImgWidth" #performance>
+        <mat-option [value]="1200">high - slower performance</mat-option>
+        <mat-option [value]="900">medium - default</mat-option>
+        <mat-option [value]="600">low - high performance</mat-option>
       </mat-select>
     </mat-form-field>
+    -->
     <mat-form-field class="full-width" appearance="outline">
       <mat-label>Player</mat-label>
       <mat-select #playerInput [value]="data ? +data.memberId : 'none'">
@@ -36,7 +38,7 @@
         <mat-option [value]="'none'">None</mat-option>
       </mat-select>
     </mat-form-field>
-    <input #uploadInput style="display:none;" class="form-control" (change)="readImage($event, imageElement, performance.value)" type="file" accept="image/*">
+    <input #uploadInput style="display:none;" class="form-control" (change)="readImage($event, imageElement, uploadImgWidth)" type="file" accept="image/*">
     <div class="row">
       <div class="col-2 pt-2">
         <mat-icon (click)="rotate(-90)">rotate_left</mat-icon>

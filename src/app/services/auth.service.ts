@@ -12,6 +12,7 @@ export class AuthService {
   private token: string;
   private loggedIn = new Subject();
   private userNames;
+  private admin: boolean;
 
   constructor(
     private http: HttpClient,
@@ -39,6 +40,13 @@ export class AuthService {
 
   setToken(token) {
     this.token = token;
+  }
+
+  setAdmin(admin: boolean) {
+    this.admin = admin;
+  }
+  isAdmin(): boolean {
+    return this.admin;
   }
 
   /**

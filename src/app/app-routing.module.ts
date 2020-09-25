@@ -6,6 +6,7 @@ import { CoordinatorGuardService } from './services/coordinator-guard.service';
 import { LoginComponent } from './login/login.component';
 import { EventResultsTableComponent } from './event-results-table/event-results-table.component';
 import { ResultsComponent } from './results/results.component';
+import { KidMoneyTrackerComponent } from './kid-money-tracker/kid-money-tracker.component';
 
 const routes: Routes = [
   { path: 'coordinator-wrap-up', component: WrapUpComponent, canActivate: [CoordinatorGuardService] },
@@ -13,7 +14,8 @@ const routes: Routes = [
   { path: 'st-live/:id', component: MainComponent },
   { path: 'results', component: EventResultsTableComponent },
   { path: 'results/:id', component: ResultsComponent },
-  { path: '**', redirectTo: 'results', pathMatch: 'full' }
+  { path: 'money-tracker', component: KidMoneyTrackerComponent },
+  { path: '**', redirectTo: 'money-tracker', pathMatch: 'full' }
 ];
 
 @NgModule({

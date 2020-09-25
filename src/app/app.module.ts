@@ -41,6 +41,7 @@ import { WrapUpSummariesComponent } from './coordinator-wrap-up/wrap-up-summarie
 import { MainComponent } from './live-results/main/main.component';
 import { EventResultsTableComponent } from './event-results-table/event-results-table.component';
 import { ResultsComponent } from './results/results.component';
+import { KidMoneyTrackerComponent } from './kid-money-tracker/kid-money-tracker.component';
 
 @NgModule({
   declarations: [
@@ -58,7 +59,8 @@ import { ResultsComponent } from './results/results.component';
     WrapUpSummariesComponent,
     MainComponent,
     EventResultsTableComponent,
-    ResultsComponent
+    ResultsComponent,
+    KidMoneyTrackerComponent
   ],
   imports: [
     BrowserModule,

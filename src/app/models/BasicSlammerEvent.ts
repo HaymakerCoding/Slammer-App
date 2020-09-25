@@ -22,8 +22,10 @@ export class BasicSlammerEvent {
       public photoMaster: string,
       public doggieMasterVideo: string,
       public skinMasterVideo: string,
+      public winnerVideo: string,
       public OCvideo: string,
       public kidsBones: number
+
   ) {}
 
 }

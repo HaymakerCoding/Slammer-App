@@ -61,6 +61,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
         this.authService.setRefreshToken(response.payload[0].refreshToken);
         this.authService.setToken(response.payload[0].token);
         this.authService.setLoggedIn(true);
+        this.authService.setAdmin(response.payload[0].admin);
         const destinationURL = sessionStorage.getItem('destination');
         this.router.navigate([destinationURL]);
         this.close();

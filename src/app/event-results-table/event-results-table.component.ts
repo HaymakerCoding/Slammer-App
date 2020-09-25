@@ -155,7 +155,7 @@ export class EventResultsTableComponent implements OnInit, OnDestroy {
     switch (shortMonth) {
       case 'Sep': return 'September';
       case 'Aug': return 'August';
-      case 'Jul': return 'Junly';
+      case 'Jul': return 'July';
       case 'Jun': return 'June';
       case 'May': return 'May';
       case 'Apr': return 'April';

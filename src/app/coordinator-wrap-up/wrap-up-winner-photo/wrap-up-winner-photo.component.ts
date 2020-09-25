@@ -29,6 +29,8 @@ export class WrapUpWinnerPhotoComponent implements OnInit, OnDestroy {
   uploading: boolean;
   subscriptions: Subscription[] = [];
   dialogRef: MatDialogRef<any>;
+  uploadImgWidth: number;
+  
 
   constructor(
     private matDialog: MatDialog,
@@ -36,6 +38,7 @@ export class WrapUpWinnerPhotoComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    this.uploadImgWidth = 1100; // defualt image width for cropping, higher width = better quality but slower performance
     this.uploading = false;
     this.imageDestination = '';
     this.getWinnerPhoto();

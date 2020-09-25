@@ -9,6 +9,7 @@
 
   <h3 mat-dialog-title>Event Winner</h3>
   <mat-dialog-content>
+    <!--
     <mat-form-field class="full-width" appearance="outline">
       <mat-label>Image Upload Quality</mat-label>
       <mat-select [value]="500" #performance>
@@ -17,8 +18,9 @@
         <mat-option [value]="300">low - high performance</mat-option>
       </mat-select>
     </mat-form-field>
+  -->
 
-    <input #uploadInput style="display:none;" class="form-control" (change)="readImage($event, imageElement, performance.value)" type="file" accept="image/*">
+    <input #uploadInput style="display:none;" class="form-control" (change)="readImage($event, imageElement, uploadImgWidth)" type="file" accept="image/*">
     <div class="row">
       <div class="col-2 pt-2">
         <mat-icon (click)="rotate(-90)">rotate_left</mat-icon>

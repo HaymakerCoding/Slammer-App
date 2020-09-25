@@ -143,6 +143,12 @@
         </mat-label>
         <input matInput [(ngModel)]="eventSelected.OCvideo" (input)="unsavedVideoLinks = true">
       </mat-form-field>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>
+          Winner Video
+        </mat-label>
+        <input matInput [(ngModel)]="eventSelected.winnerVideo" (input)="unsavedVideoLinks = true">
+      </mat-form-field>
       <p style="color:red;" *ngIf="unsavedVideoLinks === true">* You may have unsaved changes, don't forget to save.</p>
       <button mat-raised-button (click)="updateEventLinks()" color="primary">Save</button>
     </section>

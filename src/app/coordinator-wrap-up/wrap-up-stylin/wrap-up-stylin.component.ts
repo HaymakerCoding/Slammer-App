@@ -29,6 +29,7 @@ export class WrapUpStylinComponent implements OnInit, OnDestroy {
   mostStylin: MostStylinWinner;
   dialogRef: MatDialogRef<any>;
   loading: boolean;
+  uploadImgWidth: number;
 
   constructor(
     private stylinService: MostStylinService,
@@ -36,6 +37,7 @@ export class WrapUpStylinComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    this.uploadImgWidth = 1100; // defualt image width for cropping, higher width = better quality but slower performance
     this.loading = true;
     this.uploading = false;
     this.imageDestination = '';

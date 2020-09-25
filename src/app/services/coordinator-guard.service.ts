@@ -39,7 +39,7 @@ export class CoordinatorGuardService implements CanActivate {
           if (response.status === 200) {
             this.authService.setToken(response.token);
             this.authService.setRefreshToken(response.refreshToken);
-
+            this.authService.setAdmin(response.admin);
             this.router.navigate([URL]);
             this.authService.setLoggedIn(true);
             return true;
