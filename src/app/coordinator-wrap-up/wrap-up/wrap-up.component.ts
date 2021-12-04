@@ -71,7 +71,7 @@ export class WrapUpComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.eventService.getAllSeasons().subscribe(response => {
       if (response.status === 200) {
         this.seasons = response.payload;
-        this.seasonSelected = this.seasons[0];
+        this.seasonSelected = this.seasons[1];
         this.loadingPercentage = 20;
         this.getEventsList(this.seasonSelected);
       } else {
@@ -103,9 +103,12 @@ export class WrapUpComponent implements OnInit, OnDestroy {
       if (response.status === 200) {
         this.eventList = response.payload;
         this.eventSelected = this.eventList[0];
-        console.log(this.eventSelected.published);
         this.loadingPercentage = 40;
-        this.getAllRegistered();
+        if (this.eventSelected) {
+          this.getAllRegistered();
+        } else {
+          this.loadingPercentage = 100;
+        }
       } else {
         alert('Sorry there was an error getting events from the database. Please try back later.');
         console.error(response);

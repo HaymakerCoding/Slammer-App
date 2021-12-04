@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { AuthService } from './auth.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,7 @@ export class MostStylinService {
    */
   get(eventId) {
     const params = new HttpParams().set('eventId', eventId);
-    const URL = 'https://clubeg.golf/common/api_REST/v1/slammer-tour/most-stylin/get/index.php';
+    const URL = environment.API_URL + 'slammer-tour/most-stylin/get/index.php';
     return this.http.get<any>(URL, { params })
       .pipe(map(response => {
           return response;
@@ -33,7 +34,7 @@ export class MostStylinService {
    */
   add(playerId, file, fileExtension, fileName, eventId) {
     const headers = this.authService.getAuthHeader();
-    const URL = 'https://clubeg.golf/common/api_REST/v1/slammer-tour/most-stylin/add/index.php';
+    const URL = environment.API_URL + 'slammer-tour/most-stylin/add/index.php';
     return this.http.post<any>(URL, { playerId, file, fileExtension, fileName, eventId }, { headers })
       .pipe(map(response => {
           return response;
@@ -49,7 +50,7 @@ export class MostStylinService {
    */
   update(playerId, file, fileExtension, id, oldPicURL, eventId) {
     const headers = this.authService.getAuthHeader();
-    const URL = 'https://clubeg.golf/common/api_REST/v1/slammer-tour/most-stylin/update/index.php';
+    const URL = environment.API_URL + 'slammer-tour/most-stylin/update/index.php';
     return this.http.patch<any>(URL, { playerId, file, fileExtension, id, oldPicURL, eventId}, { headers })
       .pipe(map(response => {
           return response;
@@ -65,7 +66,7 @@ export class MostStylinService {
   delete(id, picURL, eventId) {
     const headers = this.authService.getAuthHeader();
     const params = new HttpParams().set('id', id).set('picURL', picURL);
-    const URL = 'https://clubeg.golf/common/api_REST/v1/slammer-tour/most-stylin/delete/index.php';
+    const URL = environment.API_URL + 'slammer-tour/most-stylin/delete/index.php';
     return this.http.delete<any>(URL, { params, headers })
       .pipe(map(response => {
           return response;

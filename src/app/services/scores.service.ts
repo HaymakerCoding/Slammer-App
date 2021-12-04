@@ -4,6 +4,7 @@ import { map } from 'rxjs/operators';
 import { PlayerScores } from '../models/PlayerScores';
 import { AuthService } from './auth.service';
 import { Group } from '../models/Group';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,7 @@ export class ScoresService {
    */
   getAllScores(eventId: number) {
     const params = new HttpParams().set('eventId', eventId.toString());
-    const URL = 'https://clubeg.golf/common/api_REST/v1/slammer-tour/events/scores/get-all-for-event/index.php';
+    const URL = environment.API_URL + 'slammer-tour/events/scores/get-all-for-event/index.php';
     return this.http.get<any>(URL, { params })
       .pipe(map(response => {
           return response;
@@ -35,7 +36,7 @@ export class ScoresService {
    */
   update(scores: PlayerScores, eventId) {
     const headers = this.authService.getAuthHeader();
-    const URL = 'https://clubeg.golf/common/api_REST/v1/slammer-tour/events/scores/update/index.php';
+    const URL = environment.API_URL + 'slammer-tour/events/scores/update/index.php';
     return this.http.patch<any>(URL, { scores, eventId }, { headers })
       .pipe(map(response => {
           return response;
@@ -45,7 +46,7 @@ export class ScoresService {
 
   initScores(group: Group, eventId) {
     const headers = this.authService.getAuthHeader();
-    const URL = 'https://clubeg.golf/common/api_REST/v1/slammer-tour/events/scores/init/index.php';
+    const URL = environment.API_URL + 'slammer-tour/events/scores/init/index.php';
     return this.http.post<any>(URL, { group, eventId }, { headers })
       .pipe(map(response => {
           return response;

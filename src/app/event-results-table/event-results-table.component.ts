@@ -26,6 +26,7 @@ export class EventResultsTableComponent implements OnInit, OnDestroy {
   events: BasicSlammerEvent[];
   displayedMonths: DisplayedMonths[] = [];
   months: string[] = [];
+  monthAndYearMatched: string[] = [];
   monthEvents: MonthEvents[] = [];
   liveEvents: BasicSlammerEvent[];
   onPhone: boolean;
@@ -65,9 +66,10 @@ export class EventResultsTableComponent implements OnInit, OnDestroy {
    */
   getAllYears() {
     this.subscriptions.push(this.eventService.getAllSeasons().subscribe(response => {
+      const thisYear: number = new Date().getFullYear();
       if (response.status === 200) {
         this.years = response.payload;
-        this.yearSelected = this.years[0];
+        this.yearSelected = this.years.find(year => +year === 2022);
         this.getEvents();
       } else {
         console.error(response);
@@ -116,15 +118,19 @@ export class EventResultsTableComponent implements OnInit, OnDestroy {
    */
   organizeEvents() {
     this.events.forEach(x => {
-      const month = x.displayDate.split(' ')[1];
-      if (this.months.includes(month) === false) {
+      const bits = x.displayDate.split(' ');
+      const month = bits[1];
+      const year = bits[3];
+      const monthAndYear = month + " " + year;
+      if (this.monthAndYearMatched.includes(monthAndYear) === false) {
         this.months.push(month);
+        this.monthAndYearMatched.push(monthAndYear);
         const newEvents: BasicSlammerEvent[] = [];
         newEvents.push(x);
-        const newMonthEvent: MonthEvents = { month, events: newEvents };
+        const newMonthEvent: MonthEvents = { month, year, events: newEvents };
         this.monthEvents.push(newMonthEvent);
       } else {
-        this.monthEvents.find(y => y.month === month).events.push(x);
+        this.monthEvents.find(y => y.month === month && +y.year === +year).events.push(x);
       }
     });
     this.loading = false;
@@ -180,5 +186,6 @@ interface DisplayedMonths {
 
 interface MonthEvents {
   month: string;
+  year: number;
   events: BasicSlammerEvent[];
 }

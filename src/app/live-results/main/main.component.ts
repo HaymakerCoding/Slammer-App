@@ -82,6 +82,7 @@ export class MainComponent implements OnInit, OnDestroy {
    */
   getEvent(eventId: string) {
     this.subscriptions.push(this.eventService.get(eventId).subscribe(response => {
+      console.log(response);
       if (response.status === 200) {
         this.event = response.payload;
         this.loadingPercentage = 20;
@@ -97,6 +98,7 @@ export class MainComponent implements OnInit, OnDestroy {
    */
   getCourse() {
     this.subscriptions.push(this.eventService.getCourse(this.event.courseId.toString()).subscribe(response => {
+      console.log(response);
       if (response.status === 200) {
         this.loadingPercentage = 30;
         this.course = response.payload[0];

@@ -3,6 +3,7 @@ import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +26,7 @@ export class AuthService {
 
   getUserNamesFromDb() {
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + this.getToken());
-    return this.http.get<any>('https://clubeg.golf/common/api_REST/v1/clubeg/members/get-member-nickname/index.php', { headers })
+    return this.http.get<any>('https://old.clubeg.golf/common/api_REST/v1/clubeg/members/get-member-nickname/index.php', { headers })
     .pipe(map(response => {
       return response;
     }));
@@ -81,7 +82,7 @@ export class AuthService {
   getNewToken() {
     const refreshToken = this.getRefreshToken();
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + refreshToken);
-    return this.http.get<any>('https://clubeg.golf/common/api_REST/v1/auth/get-new-token.php', { headers })
+    return this.http.get<any>(environment.API_URL + 'auth/get-new-token.php', { headers })
     .pipe(map(response => {
       return response;
     }));
@@ -92,7 +93,7 @@ export class AuthService {
    * @param form Format data
    */
   login(form) {
-    return this.http.post<any>('https://clubeg.golf/common/api_REST/v1/auth/login-new.php', {
+    return this.http.post<any>(environment.API_URL + 'auth/login-new.php', {
       password: form.password,
       email: form.email
     })
@@ -117,7 +118,7 @@ export class AuthService {
   isCoordinator(eventId) {
     const headers = this.getAuthHeader();
     const params = new HttpParams().set('eventId', eventId);
-    return this.http.get<any>('https://clubeg.golf/common/api_REST/v1/auth/check_slammer_coordinator.php',
+    return this.http.get<any>(environment.API_URL + 'auth/check_slammer_coordinator.php',
     { headers, params })
     .pipe(map(response => {
         return response;

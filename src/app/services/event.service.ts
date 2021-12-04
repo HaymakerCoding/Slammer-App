@@ -3,6 +3,7 @@ import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { BasicSlammerEvent } from '../models/BasicSlammerEvent';
 import { AuthService } from './auth.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,7 @@ export class EventService {
    */
   get(id: string) {
     const params = new HttpParams().set('id', id);
-    const URL = 'https://clubeg.golf/common/api_REST/v1/slammer-tour/events/get/index.php';
+    const URL = environment.API_URL + 'slammer-tour/events/get/index.php';
     return this.http.get<any>(URL, { params })
       .pipe(map(response => {
           return response;
@@ -36,7 +37,7 @@ export class EventService {
    */
   getRanks(dateTime, leagueId, eventId: string) {
     const params = new HttpParams().set('dateTime', dateTime).set('leagueId', leagueId).set('eventId', eventId);
-    const URL = 'https://clubeg.golf/common/api_REST/v1/slammer-tour/events/get-ranks/index.php';
+    const URL = environment.API_URL + 'slammer-tour/events/get-ranks/index.php';
     return this.http.get<any>(URL, { params })
       .pipe(map(response => {
           return response;
@@ -48,7 +49,7 @@ export class EventService {
    * return all seasons in an array
    */
   getAllSeasons() {
-    const URL = 'https://clubeg.golf/common/api_REST/v1/slammer-tour/seasons/get-all/index.php';
+    const URL = environment.API_URL + 'slammer-tour/seasons/get-all/index.php';
     return this.http.get<any>(URL)
       .pipe(map(response => {
           return response;
@@ -61,7 +62,7 @@ export class EventService {
    */
   getCMPCmatches(eventId: string) {
     const params = new HttpParams().set('eventId', eventId);
-    const URL = 'https://clubeg.golf/common/api_REST/v1/clubeg/tournaments/cmpc/get-all-by-event/index.php';
+    const URL = environment.API_URL + 'clubeg/tournaments/cmpc/get-all-by-event/index.php';
     return this.http.get<any>(URL, { params })
       .pipe(map(response => {
           return response;
@@ -74,7 +75,7 @@ export class EventService {
    */
   getPars(eventId: string) {
     const params = new HttpParams().set('eventId', eventId);
-    const URL = 'https://clubeg.golf/common/api_REST/v1/slammer-tour/events/pars/get/index.php';
+    const URL = environment.API_URL + 'slammer-tour/events/pars/get/index.php';
     return this.http.get<any>(URL, { params })
       .pipe(map(response => {
           return response;
@@ -87,7 +88,7 @@ export class EventService {
    */
   getEventsBySeason(season: number) {
     const params = new HttpParams().set('season', season.toString());
-    const URL = 'https://clubeg.golf/common/api_REST/v1/slammer-tour/events/get-list-by-season/index.php';
+    const URL = environment.API_URL + 'slammer-tour/events/get-list-by-season/index.php';
     return this.http.get<any>(URL, { params })
       .pipe(map(response => {
           return response;
@@ -100,7 +101,7 @@ export class EventService {
    */
   getResultsList(season: number) {
     const params = new HttpParams().set('season', season.toString());
-    const URL = 'https://clubeg.golf/common/api_REST/v1/slammer-tour/events/get-results-list/index.php';
+    const URL = environment.API_URL + 'slammer-tour/events/get-results-list/index.php';
     return this.http.get<any>(URL, { params })
       .pipe(map(response => {
           return response;
@@ -110,7 +111,7 @@ export class EventService {
 
   updateVideoLinks(event: BasicSlammerEvent) {
     const headers = this.authService.getAuthHeader();
-    const URL = 'https://clubeg.golf/common/api_REST/v1/slammer-tour/events/update-video-links/index.php';
+    const URL = environment.API_URL + 'slammer-tour/events/update-video-links/index.php';
     return this.http.patch<any>(URL, { event }, { headers })
       .pipe(map(response => {
           return response;
@@ -120,7 +121,7 @@ export class EventService {
 
   getCourse(id) {
     const params = new HttpParams().set('id', id.toString());
-    const URL = 'https://clubeg.golf/common/api_REST/v1/clubeg/courses/get/index.php';
+    const URL = environment.API_URL + 'clubeg/courses/get/index.php';
     return this.http.get<any>(URL, { params })
       .pipe(map(response => {
           return response;
@@ -131,7 +132,7 @@ export class EventService {
 
   updateScorecard(eventId, pars) {
     const headers = this.authService.getAuthHeader();
-    const URL = 'https://clubeg.golf/common/api_REST/v1/slammer-tour/events/update-scorecard/index.php';
+    const URL = environment.API_URL + 'slammer-tour/events/update-scorecard/index.php';
     return this.http.patch<any>(URL, { eventId, pars }, { headers })
       .pipe(map(response => {
           return response;
@@ -141,7 +142,7 @@ export class EventService {
 
   updatePublished(eventId, published) {
     const headers = this.authService.getAuthHeader();
-    const URL = 'https://clubeg.golf/common/api_REST/v1/slammer-tour/events/update-published/index.php';
+    const URL = environment.API_URL + 'slammer-tour/events/update-published/index.php';
     return this.http.patch<any>(URL, { eventId, published }, { headers })
       .pipe(map(response => {
           return response;
@@ -153,7 +154,7 @@ export class EventService {
    * Get the current doggie sponsor
    */
   getDoggieSponsor() {
-    return this.http.get<any>('https://clubeg.golf/common/api_REST/v1/slammer-tour/events/get-current-doggie-sponsor/index.php')
+    return this.http.get<any>(environment.API_URL + 'slammer-tour/events/get-current-doggie-sponsor/index.php')
       .pipe(map(response => {
         return response;
     }));

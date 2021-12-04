@@ -3,6 +3,7 @@ import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 import { Payment } from '../models/KidsMoney';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,7 @@ export class KidsMoneyService {
    */
   get(eventId: string) {
     const params = new HttpParams().set('eventId', eventId);
-    const URL = 'https://clubeg.golf/common/api_REST/v1/slammer-tour/events/kids-money/get/index.php';
+    const URL = environment.API_URL + 'slammer-tour/events/kids-money/get/index.php';
     return this.http.get<any>(URL, { params })
       .pipe(map(response => {
           return response;
@@ -35,7 +36,7 @@ export class KidsMoneyService {
    */
   update(eventId, money) {
     const headers = this.authService.getAuthHeader();
-    const URL = 'https://clubeg.golf/common/api_REST/v1/slammer-tour/events/kids-money/update/index.php';
+    const URL = environment.API_URL + 'slammer-tour/events/kids-money/update/index.php';
     return this.http.patch<any>(URL, { eventId, money }, { headers })
       .pipe(map(response => {
           return response;
@@ -45,7 +46,7 @@ export class KidsMoneyService {
 
   getMoneyTrackerData(season: string) {
     const params = new HttpParams().set('season', season);
-    const URL = 'https://clubeg.golf/common/api_REST/v1/slammer-tour/events/kids-money/get-money-tracker-data/index.php';
+    const URL = environment.API_URL + 'slammer-tour/events/kids-money/get-money-tracker-data/index.php';
     return this.http.get<any>(URL, { params })
       .pipe(map(response => {
           return response;
@@ -58,7 +59,7 @@ export class KidsMoneyService {
    */
   addPayment(slammerId, amount, season) {
     const headers = this.authService.getAuthHeader();
-    const URL = 'https://clubeg.golf/common/api_REST/v1/slammer-tour/events/kids-money/add-payment/index.php';
+    const URL = environment.API_URL + 'slammer-tour/events/kids-money/add-payment/index.php';
     return this.http.post<any>(URL, { slammerId, amount, season }, { headers })
       .pipe(map(response => {
           return response;
@@ -68,7 +69,7 @@ export class KidsMoneyService {
 
   updatePayment(payment: Payment) {
     const headers = this.authService.getAuthHeader();
-    const URL = 'https://clubeg.golf/common/api_REST/v1/slammer-tour/events/kids-money/update-payment/index.php';
+    const URL = environment.API_URL + 'slammer-tour/events/kids-money/update-payment/index.php';
     return this.http.patch<any>(URL, { payment }, { headers })
       .pipe(map(response => {
           return response;
@@ -82,7 +83,7 @@ export class KidsMoneyService {
   deletePayment(id: string) {
     const headers = this.authService.getAuthHeader();
     const params = new HttpParams().set('id', id);
-    const URL = 'https://clubeg.golf/common/api_REST/v1/slammer-tour/events/kids-money/delete-payment/index.php';
+    const URL = environment.API_URL + 'slammer-tour/events/kids-money/delete-payment/index.php';
     return this.http.delete<any>(URL, { params, headers })
       .pipe(map(response => {
           return response;

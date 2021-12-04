@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { AuthService } from './auth.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ export class WinnerPhotoService {
 
   get(eventId) {
     const params = new HttpParams().set('eventId', eventId);
-    const URL = 'https://clubeg.golf/common/api_REST/v1/slammer-tour/events/winner-photo/get/index.php';
+    const URL = environment.API_URL + 'slammer-tour/events/winner-photo/get/index.php';
     return this.http.get<any>(URL, { params })
       .pipe(map(response => {
           return response;
@@ -30,7 +31,7 @@ export class WinnerPhotoService {
    */
   add(file, fileExtension, eventId) {
     const headers = this.authService.getAuthHeader();
-    const URL = 'https://clubeg.golf/common/api_REST/v1/slammer-tour/events/winner-photo/add/index.php';
+    const URL = environment.API_URL + 'slammer-tour/events/winner-photo/add/index.php';
     return this.http.post<any>(URL, { file, fileExtension, eventId }, { headers })
       .pipe(map(response => {
           return response;
@@ -45,7 +46,7 @@ export class WinnerPhotoService {
    */
   update(file, fileExtension, eventId, oldPicURL) {
     const headers = this.authService.getAuthHeader();
-    const URL = 'https://clubeg.golf/common/api_REST/v1/slammer-tour/events/winner-photo/update/index.php';
+    const URL = environment.API_URL + 'slammer-tour/events/winner-photo/update/index.php';
     return this.http.patch<any>(URL, { file, fileExtension, eventId, oldPicURL }, { headers })
       .pipe(map(response => {
           return response;
@@ -61,7 +62,7 @@ export class WinnerPhotoService {
   delete(eventId) {
     const headers = this.authService.getAuthHeader();
     const params = new HttpParams().set('eventId', eventId);
-    const URL = 'https://clubeg.golf/common/api_REST/v1/slammer-tour/events/winner-photo/delete/index.php';
+    const URL = environment.API_URL + 'slammer-tour/events/winner-photo/delete/index.php';
     return this.http.delete<any>(URL, { params, headers })
       .pipe(map(response => {
           return response;
